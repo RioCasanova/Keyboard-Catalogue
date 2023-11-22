@@ -8,9 +8,9 @@ Input 25 or more items in the catalogue - or write down 25 keyboards that I woul
 Keyboards   
   name - string (Leobog Hi75)
     brand - string (Leobog)
-  RGB - bool (yes)
-  LED - string (southfacing)
-  size - string (65 percent, 70 percent)
+    RGB - bool (yes)
+    LED - string (southfacing)
+    size - string (65 percent, 70 percent)
   case_material - string (Aluminum)
   color - string (white)
   plate_material - string (pcb)
