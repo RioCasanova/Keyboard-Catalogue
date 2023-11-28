@@ -6,6 +6,7 @@ Input 25 or more items in the catalogue - or write down 25 keyboards that I woul
 
 ### Values - Columns or Attributes of a Keyboard
 Keyboards      
+  **keyboard_id** - int  
   **name** - string (Leobog Hi75)  
   **brand** - string (Leobog)  
   **RGB** - bool (yes)  
