@@ -13,17 +13,11 @@ Keyboards
   **LED** - string (southfacing)  
   **size** - string (65 percent, 70 percent)  
   **case_material** - string (Aluminum)  
-  **color** - string (white)  
-  **late_material** - string (pcb)  
-  **accessories** - string (coiled wire, cap puller, switch puller)  
-  **weight** - int (2.4lbs)  
-  **sound** - string (thocky, clicky, creamy)  
+  **color** - string (white)   
   **price** - int (199.00)  
-  **knob** - bool (yes)  
-  **screen** - bool (no)  
   **connectivity** - string (bluetooth, 2.4, usb-c)  
   **image** - string (url)  
   **site** - string (url where can purchase)  
-  **sound** - string (url where can hear)
+
   
   
