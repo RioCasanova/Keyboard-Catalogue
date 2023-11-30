@@ -31,3 +31,6 @@ Admin section must be secured using a sessions based login script.
 In order to test that a new item can be inserted, I will also ask for some kind of rough output page to be shown just so that we can see a new item has been inserted successfully and that all data and imagery is present (we must be able to see an image thumbnail) . Design, filtering, features, etc, are not a factor for this rough output. 
 
 Design and usability (proper validation, form alignment, etc.) is a factor for the admin section. Validation must be PHP and not browser validation. 
+
+## Notes:
+I wont be closing any of the issues that I have on this project so that I can demonstrate my process and for future reference just for myself.
