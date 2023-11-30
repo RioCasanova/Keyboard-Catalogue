@@ -20,4 +20,17 @@ Keyboards
   **site** - string (url where can purchase)  
 
   
+  ## Requirements
   
+complete the /admin/ section of your catalog where a new item can be inserted, edited, and deleted. 
+
+Admin section must be secured using a sessions based login script.   
+**username:** admin    
+**password:** Password1!
+
+In order to test that a new item can be inserted, I will also ask for some kind of rough output page to be shown just so that we can see a new item has been inserted successfully and that all data and imagery is present (we must be able to see an image thumbnail) . Design, filtering, features, etc, are not a factor for this rough output. 
+
+Insert must have image upload and resize functionality. All proper image validation (size/filetypes) must be present. 
+There will be a challenge mark for enabling PNG uploads/resize as well as JPG. 
+
+Design and usability (proper validation, form alignment, etc.) is a factor for the admin section. Validation must be PHP and not browser validation. 
