@@ -66,20 +66,20 @@ function filter_by_brand()
 function filter_by_rgb()
 {
     global $connection;
-    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
-    $brand = $_GET['brand'];
+    $keyboard_by_rgb = $connection->prepare("SELECT * FROM keyboards WHERE rgb = ?");
+    $rgb = $_GET['rgb'];
 
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
 
 
-    $keyboard_by_brand->bind_param("s", $brand);
+    $keyboard_by_rgb->bind_param("i", $rgb);
 
-    if (!$keyboard_by_brand->execute()) {
-        handle_database_error("selecting keyboard by brand");
+    if (!$keyboard_by_rgb->execute()) {
+        handle_database_error("selecting keyboard by rgb");
     }
-    $result = $keyboard_by_brand->get_result();
+    $result = $keyboard_by_rgb->get_result();
     $atts = [];
     while ($row = $result->fetch_assoc()) {
         $atts[] = $row;
@@ -91,20 +91,20 @@ function filter_by_rgb()
 function filter_by_led_type()
 {
     global $connection;
-    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
-    $brand = $_GET['brand'];
+    $keyboard_by_led_type = $connection->prepare("SELECT * FROM keyboards WHERE led_type = ?");
+    $led_type = $_GET['led_type'];
 
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
 
 
-    $keyboard_by_brand->bind_param("s", $brand);
+    $keyboard_by_led_type->bind_param("s", $led_type);
 
-    if (!$keyboard_by_brand->execute()) {
-        handle_database_error("selecting keyboard by brand");
+    if (!$keyboard_by_led_type->execute()) {
+        handle_database_error("selecting keyboard by led_type");
     }
-    $result = $keyboard_by_brand->get_result();
+    $result = $keyboard_by_led_type->get_result();
     $atts = [];
     while ($row = $result->fetch_assoc()) {
         $atts[] = $row;
@@ -116,20 +116,20 @@ function filter_by_led_type()
 function filter_by_size()
 {
     global $connection;
-    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
-    $brand = $_GET['brand'];
+    $keyboard_by_size = $connection->prepare("SELECT * FROM keyboards WHERE size = ?");
+    $size = $_GET['size'];
 
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
 
 
-    $keyboard_by_brand->bind_param("s", $brand);
+    $keyboard_by_size->bind_param("s", $size);
 
-    if (!$keyboard_by_brand->execute()) {
-        handle_database_error("selecting keyboard by brand");
+    if (!$keyboard_by_size->execute()) {
+        handle_database_error("selecting keyboard by size");
     }
-    $result = $keyboard_by_brand->get_result();
+    $result = $keyboard_by_size->get_result();
     $atts = [];
     while ($row = $result->fetch_assoc()) {
         $atts[] = $row;
@@ -141,20 +141,20 @@ function filter_by_size()
 function filter_by_price()
 {
     global $connection;
-    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
-    $brand = $_GET['brand'];
+    $keyboard_by_price = $connection->prepare("SELECT * FROM keyboards WHERE price = ?");
+    $price = $_GET['price'];
 
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
 
 
-    $keyboard_by_brand->bind_param("s", $brand);
+    $keyboard_by_price->bind_param("s", $price);
 
-    if (!$keyboard_by_brand->execute()) {
-        handle_database_error("selecting keyboard by brand");
+    if (!$keyboard_by_price->execute()) {
+        handle_database_error("selecting keyboard by price");
     }
-    $result = $keyboard_by_brand->get_result();
+    $result = $keyboard_by_price->get_result();
     $atts = [];
     while ($row = $result->fetch_assoc()) {
         $atts[] = $row;
@@ -167,20 +167,20 @@ function filter_by_price()
 function filter_by_connectivity()
 {
     global $connection;
-    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
-    $brand = $_GET['brand'];
+    $keyboard_by_connectivity = $connection->prepare("SELECT * FROM keyboards WHERE connectivity = ?");
+    $connectivity = $_GET['connectivity'];
 
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
 
 
-    $keyboard_by_brand->bind_param("s", $brand);
+    $keyboard_by_connectivity->bind_param("s", $connectivity);
 
-    if (!$keyboard_by_brand->execute()) {
-        handle_database_error("selecting keyboard by brand");
+    if (!$keyboard_by_connectivity->execute()) {
+        handle_database_error("selecting keyboard by connectivity");
     }
-    $result = $keyboard_by_brand->get_result();
+    $result = $keyboard_by_connectivity->get_result();
     $atts = [];
     while ($row = $result->fetch_assoc()) {
         $atts[] = $row;

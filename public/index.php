@@ -2,6 +2,21 @@
 <?php require_once("/home/rcasanova2/data/connect.php"); ?>
 <?php require_once("../private/prepared.php"); ?>
 <?php
+//  ****************************************************************************************************
+// Created By: Rio Casanova
+// Purpose: CRUD SQL Configuration back-end for a front-end keyboard application
+//          that displays keyboards to the users, and if an admin, can make 
+//          changes to the database.
+//
+// Date Created: December 1, 2023
+// Last Updated: December 1, 2023
+// Created For: PHP Course @ NAIT
+//
+// Comments: Template was taken from a previous assignment and retrofitted for this 
+//           assignment. The difference is that this assignment uses photo uploading 
+//           functionality and thumbnails.
+//  *******************************************************************************************************
+
 
 $attraction_id = isset($_GET['id']) ? $_GET['id'] : "";
 if (isset($_GET['id'])) {
