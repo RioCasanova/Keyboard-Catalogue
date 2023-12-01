@@ -64,9 +64,24 @@ Admin section must be secured using a sessions based login script.
 **username:** admin    
 **password:** Password1!
 
+- Single item page with full-sized image
+- Rough Gallery page with thumbnails
+- Login Page
+- Edit/Delete page
+- Add Page
+
 In order to test that a new item can be inserted, I will also ask for some kind of rough output page to be shown just so that we can see a new item has been inserted successfully and that all data and imagery is present (we must be able to see an image thumbnail) . Design, filtering, features, etc, are not a factor for this rough output. 
 
 Design and usability (proper validation, form alignment, etc.) is a factor for the admin section. Validation must be PHP and not browser validation. 
+
+## Clarifications 
+
+if there st
+images: resize and copy the image and that is what will be stored and displayed to the user
+picture dimensions: width and height are up to use - create multiple folders with different sizes
+edit page: you dont have to add a picture on the edit page or add and if statement that says if nothing is added use what it has
+single item display: required
+validation: should be included
 
 ## Notes:
 I wont be closing any of the issues that I have on this project so that I can demonstrate my process and for future reference just for myself.
