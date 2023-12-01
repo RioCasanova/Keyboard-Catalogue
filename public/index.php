@@ -23,19 +23,10 @@ $category = isset($_GET['category']) ? $_GET['category'] : "";
             <a href="login.php" class="btn btn-success">Login</a>
         </nav>
         <div class="">
-            <h1 class="fw-light text-center mt-5">Edmonton Attractions</h1>
-            <p class="text-muted mb-4">Welcome to Edmonton Attractions, your guide to the best things to see
-                and do in Edmonton, Alberta! Whether you're a local resident or a visitor to our vibrant city, we've
-                curated
-                a list of exciting attractions that showcase Edmonton's rich culture, natural beauty, and entertainment
-                options.</p>
-            <p class="mt-4">Explore our selection of restaurants, parks, museums, festivals, historical
-                buildings, and more. Each attraction comes with useful information such as category, cost, address,
-                rating,
-                and a brief description. You can even find direct links to their websites for further details and
-                planning.
-                Discover the hidden gems and popular hotspots that make edmonton a fantastic destination. Start your
-                adventure today by browsing through the attractions below.</p>
+            <h1 class="fw-light text-center mt-5">Catalogue Template</h1>
+            <p class="text-muted mb-4">This index page is here just so I can use it for reference and have a landing
+                page to access my admin area</p>
+            <p class="mt-4"></p>
         </div>
     </header>
     <main>
