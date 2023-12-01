@@ -1,27 +1,29 @@
 <?php require_once("/home/rcasanova2/data/connect.php"); ?>
 <?php
 
+//  ****************************************************************************************************
+// Created By: Rio Casanova
+// Purpose: CRUD SQL Configuration back-end for a front-end keyboard application
+//          that displays keyboards to the users, and if an admin, can make 
+//          changes to the database.
+//
+// Date Created: December 1, 2023
+// Last Updated: December 1, 2023
+// Created For: PHP Course @ NAIT
+//
+// Comments: Template was taken from a previous assignment and retrofitted for this 
+//           assignment. The difference is that this assignment uses photo uploading 
+//           functionality and thumbnails.
+//  *******************************************************************************************************
 
-
-$select_results_by_category = $connection->prepare("SELECT * FROM rcasanova2_attractions WHERE category = ?");
-$insert_statement = $connection->prepare("INSERT INTO rcasanova2_attractions(name, category, cost, address, url, description, rating, area_of_town, family_friendly, season) VALUES(?,?,?,?,?,?,?,?,?,?)");
-$select_by_id_sql = $connection->prepare("SELECT * FROM rcasanova2_attractions WHERE id = ?");
-$update_statement =
-    $connection->prepare("UPDATE rcasanova2_attractions 
-                      SET name = ?, category = ?, cost = ?, address = ?, url = ?, description = ?, rating = ?, area_of_town = ?, family_friendly = ?, season = ? 
-                      WHERE id = ?");
-$delete_statement = $connection->prepare("DELETE FROM rcasanova2_attractions WHERE id = ?");
-
-
-
-// HOME PAGE 
+// ------------------------------------------ HOMEPAGE *****************************************************
 function get_all_keyboards() // diasplays all items in database 'keyboards'
 {
     global $connection;
     $all_keyboards_sql = $connection->prepare("SELECT * FROM keyboards");
 
     if (!$all_keyboards_sql->execute()) { // IF fail
-        handle_database_error("Fetching all results for home page");
+        handle_database_error("fetching all results for home page");
     }
 
     $result = $all_keyboards_sql->get_result(); // returns object
@@ -32,51 +34,185 @@ function get_all_keyboards() // diasplays all items in database 'keyboards'
     }
     return $atts; // associative array
 }
+// ------------------------------------------ FILTERS *****************************************************
 
-// LOAD RESULTS ACCORDING TO CATEGORY
-function filter_by_category()
+// LOAD RESULTS ACCORDING TO: brand
+function filter_by_brand()
 {
     global $connection;
-    global $select_results_by_category;
-    $category = $_GET['category'];
+    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
+    $brand = $_GET['brand'];
 
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
 
 
-    $select_results_by_category->bind_param("s", $category);
+    $keyboard_by_brand->bind_param("s", $brand);
 
-    if (!$select_results_by_category->execute()) {
-        handle_database_error("Fetching all results for home page");
+    if (!$keyboard_by_brand->execute()) {
+        handle_database_error("selecting keyboard by brand");
     }
-    $result = $select_results_by_category->get_result();
+    $result = $keyboard_by_brand->get_result();
     $atts = [];
     while ($row = $result->fetch_assoc()) {
         $atts[] = $row;
     }
     return $atts;
 }
-// ADD PAGE - THIS IS WHERE THE CODE FOR INSERTING DATA WILL BE
-// INSERT
+
+
+// LOAD RESULTS ACCORDING TO: rgb (true|false)
+function filter_by_rgb()
+{
+    global $connection;
+    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
+    $brand = $_GET['brand'];
+
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+
+    $keyboard_by_brand->bind_param("s", $brand);
+
+    if (!$keyboard_by_brand->execute()) {
+        handle_database_error("selecting keyboard by brand");
+    }
+    $result = $keyboard_by_brand->get_result();
+    $atts = [];
+    while ($row = $result->fetch_assoc()) {
+        $atts[] = $row;
+    }
+    return $atts;
+}
+
+// LOAD RESULTS ACCORDING TO: led_type
+function filter_by_led_type()
+{
+    global $connection;
+    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
+    $brand = $_GET['brand'];
+
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+
+    $keyboard_by_brand->bind_param("s", $brand);
+
+    if (!$keyboard_by_brand->execute()) {
+        handle_database_error("selecting keyboard by brand");
+    }
+    $result = $keyboard_by_brand->get_result();
+    $atts = [];
+    while ($row = $result->fetch_assoc()) {
+        $atts[] = $row;
+    }
+    return $atts;
+}
+
+// LOAD RESULTS ACCORDING TO: size
+function filter_by_size()
+{
+    global $connection;
+    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
+    $brand = $_GET['brand'];
+
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+
+    $keyboard_by_brand->bind_param("s", $brand);
+
+    if (!$keyboard_by_brand->execute()) {
+        handle_database_error("selecting keyboard by brand");
+    }
+    $result = $keyboard_by_brand->get_result();
+    $atts = [];
+    while ($row = $result->fetch_assoc()) {
+        $atts[] = $row;
+    }
+    return $atts;
+}
+
+// LOAD RESULTS ACCORDING TO: price
+function filter_by_price()
+{
+    global $connection;
+    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
+    $brand = $_GET['brand'];
+
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+
+    $keyboard_by_brand->bind_param("s", $brand);
+
+    if (!$keyboard_by_brand->execute()) {
+        handle_database_error("selecting keyboard by brand");
+    }
+    $result = $keyboard_by_brand->get_result();
+    $atts = [];
+    while ($row = $result->fetch_assoc()) {
+        $atts[] = $row;
+    }
+    return $atts;
+}
+
+
+// LOAD RESULTS ACCORDING TO: connectivity
+function filter_by_connectivity()
+{
+    global $connection;
+    $keyboard_by_brand = $connection->prepare("SELECT * FROM keyboards WHERE brand = ?");
+    $brand = $_GET['brand'];
+
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+
+    $keyboard_by_brand->bind_param("s", $brand);
+
+    if (!$keyboard_by_brand->execute()) {
+        handle_database_error("selecting keyboard by brand");
+    }
+    $result = $keyboard_by_brand->get_result();
+    $atts = [];
+    while ($row = $result->fetch_assoc()) {
+        $atts[] = $row;
+    }
+    return $atts;
+}
+
+
+
+// ------------------------------------------ INSERT *****************************************************
+
+
+
 function insert_keyboard($keyboard_name, $brand, $cost, $address, $url, $description, $rating, $area, $friendly, $season)
 {
     global $connection;
-    global $insert_statement;
+    $insert_statement = $connection->prepare("INSERT INTO rcasanova2_attractions(name, category, cost, address, url, description, rating, area_of_town, family_friendly, season) VALUES(?,?,?,?,?,?,?,?,?,?)");
     $insert_statement->bind_param("ssssssisis", $keyboard_name, $brand, $cost, $address, $url, $description, $rating, $area, $friendly, $season);
     if (!$insert_statement->execute()) {
-        handle_database_error("inserting attraction");
+        handle_database_error("inserting keyboard record");
     }
 }
 
-// EDIT PAGE - THIS IS WHERE WE WILL UPDATE AND DELTE RECORDS FROM THE DATABASE
+// ------------------------------------------ EDIT *****************************************************
+
 function keyboard_by_id($keyboard_id)
 {
     global $connection;
-    global $select_by_id_sql;
+    $select_by_id_sql = $connection->prepare("SELECT * FROM rcasanova2_attractions WHERE id = ?");
     $select_by_id_sql->bind_param("i", $keyboard_id);
     if (!$select_by_id_sql->execute()) {
-        handle_database_error("Selecting attraction by id");
+        handle_database_error("Selecting keyboard by id");
     }
 
     $result = $select_by_id_sql->get_result();
@@ -84,28 +220,29 @@ function keyboard_by_id($keyboard_id)
     return $attraction;
 }
 
-
-// UPDATE
+// ------------------------------------------ UPDATE *****************************************************
 function update_keyboard($attraction_name, $category, $cost, $address, $url, $description, $rating, $area, $friendly, $season, $attraction_id)
 {
     global $connection;
-    global $update_statement;
+    $update_statement =
+        $connection->prepare("UPDATE rcasanova2_attractions 
+                      SET name = ?, category = ?, cost = ?, address = ?, url = ?, description = ?, rating = ?, area_of_town = ?, family_friendly = ?, season = ? 
+                      WHERE id = ?");
 
     $update_statement->bind_param("ssssssisisi", $attraction_name, $category, $cost, $address, $url, $description, $rating, $area, $friendly, $season, $attraction_id);
     $update_statement->execute();
     if (!$update_statement->execute()) {
-        handle_database_error("updating attraction");
+        handle_database_error("updating keyboard record");
     }
 }
 
 
-// DELETE
-// DELETE ATTRACTION BY ID
+// ------------------------------------------ DELETE *****************************************************
 
 function delete_keyboard($keyboard_id)
 {
     global $connection;
-    global $delete_statement;
+    $delete_statement = $connection->prepare("DELETE FROM rcasanova2_attractions WHERE id = ?");
     $delete_statement->bind_param("i", $keyboard_id);
     $delete_statement->execute();
     if (!$delete_statement->execute()) {
@@ -113,7 +250,7 @@ function delete_keyboard($keyboard_id)
     }
 }
 
-// ERROR HANDLING
+// ------------------------------------------ HELPERS *****************************************************
 function handle_database_error($statement)
 {
     global $connection;
