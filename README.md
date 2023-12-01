@@ -38,15 +38,15 @@ Keyboards
  14. **Modern97**  
  15. **MelGeek Pixel**  
  16. **Mojo68**  
- 17. **17**  
- 18. **18**  
- 19. **19**  
- 20. **20**  
- 21. **21**  
- 22. **22**  
- 23. **23**  
- 24. **24**  
- 25. **25**  
+ 17. **Flesports MK870**  
+ 18. **Keebmonkey WK870**  
+ 19. **Drop Cyboard**  
+ 20. **Lofree Block 98**  
+ 21. **Feker Alice 98**  
+ 22. **Lofree Loflick**  
+ 23. **Machenike KT68**  
+ 24. **Ajazz AK820**  
+ 25. **Akko Mod007**  
   
   ## Requirements
   
