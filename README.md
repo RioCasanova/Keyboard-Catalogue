@@ -17,8 +17,36 @@ Keyboards
   **price** - int (199.00)  
   **connectivity** - string (bluetooth, 2.4, usb-c)  
   **image** - string (url)  
-  **site** - string (url where can purchase)  
+  **site** - string (url where can purchase)
 
+  
+### Chosen Keyboards
+
+ 1. **Leobog Hi75**  
+ 2. **Zoom 75**  
+ 3. **Zoom 65**  
+ 4. **Zoom 98**  
+ 5. **QK75N**  
+ 6. **GMKPro**  
+ 7. **GMK67**  
+ 8. **IK75**  
+ 9. **GK61**  
+ 10. **Feker K75**  
+ 11. **Summit 65**  
+ 12. **Mojo60**   
+ 13. **Mojo84**  
+ 14. **Modern97**  
+ 15. **MelGeek Pixel**  
+ 16. **Mojo68**  
+ 17. **17**  
+ 18. **18**  
+ 19. **19**  
+ 20. **20**  
+ 21. **21**  
+ 22. **22**  
+ 23. **23**  
+ 24. **24**  
+ 25. **25**  
   
   ## Requirements
   
