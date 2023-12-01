@@ -62,3 +62,5 @@ Design and usability (proper validation, form alignment, etc.) is a factor for t
 
 ## Notes:
 I wont be closing any of the issues that I have on this project so that I can demonstrate my process and for future reference just for myself.
+
+I want to be able to integrate a youtube video on the website, so the user doesnt have to go to youtube to watch it, I also want the user to be able to upload their own youtube video that displays the functionality of the keyboard that they are uploading.
