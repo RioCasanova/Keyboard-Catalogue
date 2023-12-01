@@ -19,6 +19,14 @@ Keyboards
   **image** - string (url)  
   **site** - string (url where can purchase)
 
+### Filters
+Not filtering by color because of how much color can vary with each board
+- brand
+- RGB
+- LED
+- size
+- price
+- connectivity
   
 ### Chosen Keyboards
 
