@@ -76,12 +76,12 @@ Design and usability (proper validation, form alignment, etc.) is a factor for t
 
 ## Clarifications 
 
-if there st
-images: resize and copy the image and that is what will be stored and displayed to the user
-picture dimensions: width and height are up to use - create multiple folders with different sizes
-edit page: you dont have to add a picture on the edit page or add and if statement that says if nothing is added use what it has
-single item display: required
-validation: should be included
+
+images: resize and copy the image and that is what will be stored and displayed to the user  
+picture dimensions: width and height are up to use - create multiple folders with different sizes  
+edit page: you dont have to add a picture on the edit page or add and if statement that says if nothing is added use what it has  
+single item display: required  
+validation: should be included  
 
 ## Notes:
 I wont be closing any of the issues that I have on this project so that I can demonstrate my process and for future reference just for myself.
