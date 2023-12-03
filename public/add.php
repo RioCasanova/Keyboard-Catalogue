@@ -42,10 +42,10 @@ $add_led_type = isset($_POST['led_type']) ? trim($_POST['led_type']) : "";
 $add_size = isset($_POST['size']) ? trim($_POST['size']) : "";
 $add_case_material = isset($_POST['case_material']) ? trim($_POST['case_material']) : "";
 
-// checkboxes
+// checkboxes - done
 $add_connectivity[] =+ isset($_POST['connectivity']) ? trim($_POST['connectivity']) : "";
 
-// upload file
+// upload file - done
 $add_image = isset($_POST['image']) ? trim($_POST['image']) : "";
 
 
@@ -229,7 +229,7 @@ include("includes/header.php") ?> <!--***********************************-->
         <div class="">
             <h1 class="fw-light text-center mt-5">Add An Attraction</h1>
             <p class="text-muted text-center  mb-5">To add a record to our database, simply fill out the form below and
-                hit "Add Attraction".</p>
+                hit "Add keyboard".</p>
         </div>
         <?php if (isset($update_message)): ?>
             <div class="message text-danger">
@@ -261,14 +261,35 @@ include("includes/header.php") ?> <!--***********************************-->
                     <input type="file" class="form-control" id="myfile" name="myfile">
                 </div>
 
-                <!-- ATTRACTION NAME -->
+                <!-- KEYBOARD NAME -->
                 <div class="mb-3">
                     <label for="add_name" class="form-label fw-semibold">Attraction Name:</label>
                     <input type="text" id="add_name" name="add_name" class="form-control"
                         value="<?php echo isset($_POST['add_name']) ? $_POST['add_name'] : "" ?>">
                 </div>
 
-                <!-- CATEGORY -->
+                <!-- KEYBOARD BRAND -->
+                <div class="mb-3">
+                    <label for="add_name" class="form-label fw-semibold">Attraction Name:</label>
+                    <input type="text" id="add_name" name="add_name" class="form-control"
+                        value="<?php echo isset($_POST['add_name']) ? $_POST['add_name'] : "" ?>">
+                </div>
+
+                <!-- KEYBOARD PRICE -->
+                <div class="mb-3">
+                    <label for="add_name" class="form-label fw-semibold">Attraction Name:</label>
+                    <input type="text" id="add_name" name="add_name" class="form-control"
+                        value="<?php echo isset($_POST['add_name']) ? $_POST['add_name'] : "" ?>">
+                </div>
+
+                <!-- KEYBOARD COLOR -->
+                <div class="mb-3">
+                    <label for="add_name" class="form-label fw-semibold">Attraction Name:</label>
+                    <input type="text" id="add_name" name="add_name" class="form-control"
+                        value="<?php echo isset($_POST['add_name']) ? $_POST['add_name'] : "" ?>">
+                </div>
+
+                <!-- LED TYPE -->
                 <div class="mb-3">
                     <label for="new_category" class="form-label fw-semibold">Category:</label>
                     <select name="new_category" id="new_category" class="form-select">
@@ -276,15 +297,6 @@ include("includes/header.php") ?> <!--***********************************-->
                             [
                                 'null' => 'Select Category',
                                 'Shopping' => 'Shopping',
-                                'Historical Buildings & Monuments' => 'Historical Buildings & Monuments',
-                                'Parks & Natural Attractions' => 'Parks & Natural Attractions',
-                                'Fine Arts' => 'Fine Arts',
-                                'Science & Technology' => 'Science & Technology',
-                                'Live Music & Theatre' => 'Live Music & Theatre',
-                                'Recreational Facilities' => 'Recreational Facilities',
-                                'Year-Round Attractions' => 'Year-Round Attractions',
-                                'Restaurants & Food Vendors' => 'Restaurants & Food Vendors',
-                                'Festivals' => 'Festivals'
                             ];
 
                         foreach ($categories as $key => $value) {
@@ -299,55 +311,78 @@ include("includes/header.php") ?> <!--***********************************-->
                     </select>
                 </div>
 
+                <!-- KEYBOARD SIZE -->
+                <div class="mb-3">
+                    <label for="new_category" class="form-label fw-semibold">Category:</label>
+                    <select name="new_category" id="new_category" class="form-select">
+                        <?php $categories =
+                            [
+                                'null' => 'Select Category',
+                                'Shopping' => 'Shopping',
+                            ];
 
-                <!-- COST -->
+                        foreach ($categories as $key => $value) {
+                            if ($new_category == $key) {
+                                $selected = 'selected';
+                            } else {
+                                $selected = '';
+                            }
+                            echo "\n<option value=\"$key\" $selected>$value</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <!-- CASE MATERIAL -->
+                <div class="mb-3">
+                    <label for="new_category" class="form-label fw-semibold">Category:</label>
+                    <select name="new_category" id="new_category" class="form-select">
+                        <?php $categories =
+                            [
+                                'null' => 'Select Category',
+                                'Shopping' => 'Shopping',
+                            ];
+
+                        foreach ($categories as $key => $value) {
+                            if ($new_category == $key) {
+                                $selected = 'selected';
+                            } else {
+                                $selected = '';
+                            }
+                            echo "\n<option value=\"$key\" $selected>$value</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <!-- KEYBOARD CONNECTIVITY -->
                 <div class="form-check m-0 p-0">
-                    <p class="fw-semibold mb-0 mt-3 ">Cost:</p>
+                    <p class="fw-semibold mb-0 mt-3 ">Connectivity:</p>
                     <div class="ps-2 mb-3">
                         <div class="form-check m-0 ">
-                            <input class="form-check-input " value="free" type="radio" name="new_cost" id="new_cost"
-                                <?php echo ($new_cost == 'free') ? 'checked="checked"' : ""; ?>>
-                            <label class="form-check-label" for="new_cost">
-                                Free
+                        <input class="form-check-input" type="checkbox" value="1" name="new_family_friendly"
+                            id="new_family_friendly" <?php echo ($new_family_friendly == 1) ? 'checked="checked"' : ""; ?>>
+                            <label class="form-check-label" for="new_family_friendly">
+                                Bluetooth
                             </label>
                         </div>
                         <div class="form-check m-0">
-                            <input class="form-check-input" value="$" type="radio" name="new_cost" id="new_cost"
-                                <?php echo $new_cost == '$' ? 'checked="checked"' : ''; ?>>
-                            <label class="form-check-label" for="new_cost">
-                                $
+                            <input class="form-check-input" type="checkbox" value="1" name="new_family_friendly"
+                                id="new_family_friendly" <?php echo ($new_family_friendly == 1) ? 'checked="checked"' : ""; ?>>
+                            <label class="form-check-label" for="new_family_friendly">
+                                Yes
                             </label>
                         </div>
                         <div class="form-check m-0">
-                            <input class="form-check-input" value="$$" type="radio" name="new_cost" id="new_cost"
-                                <?php echo ($new_cost == '$$') ? 'checked="checked"' : ''; ?>>
-                            <label class="form-check-label" for="new_cost">
-                                $$
-                            </label>
-                        </div>
-                        <div class="form-check m-0">
-                            <input class="form-check-input" value="$$$" type="radio" name="new_cost" id="new_cost"
-                                <?php echo ($new_cost == '$$$') ? 'checked="checked"' : ''; ?>>
-                            <label class="form-check-label" for="new_cost">
-                                $$$
+                            <input class="form-check-input" type="checkbox" value="1" name="new_family_friendly"
+                                id="new_family_friendly" <?php echo ($new_family_friendly == 1) ? 'checked="checked"' : ""; ?>>
+                            <label class="form-check-label" for="new_family_friendly">
+                                Yes
                             </label>
                         </div>
                     </div>
                 </div>
 
-                    <!-- ADDRESS -->
-                    <div class="mb-3">
-                        <label for="new_address" class="form-label fw-semibold">Address:</label>
-                        <input type="text" id="new_address" name="new_address" class="form-control"
-                            value="<?php echo isset($_POST['new_address']) ? $new_address : "" ?>">
-                    </div>
-
-                    <!-- WEBSITE -->
-                    <div class="mb-3">
-                        <label for="new_url" class="form-label fw-semibold">Website:</label>
-                        <input type="text" id="new_url" name="new_url" class="form-control"
-                            value="<?php echo isset($_POST['new_url']) ? $new_url : "" ?>">
-                    </div>
 
                     <!-- DESCRIPTION -->
                     <div class="mb-3">
@@ -357,70 +392,16 @@ include("includes/header.php") ?> <!--***********************************-->
                     </textarea>
                     </div>
 
-                    <!-- RATING -->
+                    <!-- YOUTUBE LINK -->
                     <div class="mb-3">
-                        <label for="new_rating" class="form-label fw-semibold">Rating:</label>
-                        <select name="new_rating" id="new_rating" class="form-select">
-                            <?php $ratings =
-                                [
-                                    '0' => 'Select Rating',
-                                    '1' => '1',
-                                    '2' => '2',
-                                    '3' => '3',
-                                    '4' => '4',
-                                    '5' => '5'
-                                ];
-
-                            foreach ($ratings as $key => $value) {
-                                if ($new_rating == $key) {
-                                    $selected = 'selected';
-                                } else {
-                                    $selected = '';
-                                }
-                                echo "\n<option value=\"$key\" $selected>$value</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <!-- AREA OF TOWN -->
-                    <div class="mb-3">
-                        <label for="new_area" class="form-label fw-semibold">Area of Town:</label>
-                        <select name="new_area" id="new_area" class="form-select">
-                            <?php $areas =
-                                [
-                                    'nowhere' => 'Select Area',
-                                    'West Edmonton' => 'West Edmonton',
-                                    'Southwest Edmonton' => 'Southwest Edmonton',
-                                    'Northwest Edmonton' => 'Northwest Edmonton',
-                                    'Downtown' => 'Downtown',
-                                    'East Edmonton' => 'East Edmonton',
-                                    'Southeast Edmonton' => 'Southeast Edmonton',
-                                    'Northeast Edmonton' => 'Northeast Edmonton',
-                                    'Central Edmonton' => 'Central Edmonton',
-                                    'South Central Edmonton' => 'South Central Edmonton',
-                                    'North Central Edmonton' => 'North Central Edmonton',
-                                    'South Edmonton' => 'South Edmonton',
-                                    'North Edmonton' => 'North Edmonton',
-                                    'University Area' => 'University Area',
-                                    'Westmount' => 'Westmount',
-                                    'Various' => 'Multiple Locations'
-                                ];
-
-                            foreach ($areas as $key => $value) {
-                                if ($new_area_of_town == $key) {
-                                    $selected = 'selected';
-                                } else {
-                                    $selected = '';
-                                }
-                                echo "\n<option value=\"$key\" $selected>$value</option>";
-                            }
-                            ?>
-                        </select>
+                        <label for="new_description" class="form-label fw-semibold">Description:</label>
+                        <textarea name="new_description" class="form-control" id="new_description" cols="30" rows="4">
+                        <?php echo isset($_POST['new_description']) ? $new_description : "" ?>
+                    </textarea>
                     </div>
 
 
-                    <!-- FAMILY FRIENDLY -->
+                    <!-- RGB -->
                     <p class="fw-semibold mb-0 mt-3">Family Friendly:</p>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" value="1" name="new_family_friendly"
@@ -430,29 +411,34 @@ include("includes/header.php") ?> <!--***********************************-->
                         </label>
                     </div>
 
-                    <!-- SEASON -->
-                    <div class="mb-3">
-                        <label for="new_season" class="form-label fw-semibold">Season:</label>
-                        <select name="new_season" id="new_season" class="form-select">
-                            <?php $seasons =
-                                [
-                                    'construction' => 'Select Season',
-                                    'Year-round' => 'Year-round',
-                                    'Summer' => 'Summer',
-                                    'Winter' => 'Winter'
-                                ];
-
-                            foreach ($seasons as $key => $value) {
-                                if ($new_season == $key) {
-                                    $selected = 'selected';
-                                } else {
-                                    $selected = '';
-                                }
-                                echo "\n<option value=\"$key\" $selected>$value</option>";
-                            }
-                            ?>
-                        </select>
+                <!-- KEYBOARD CONNECTIVITY -->
+                <div class="form-check m-0 p-0">
+                    <p class="fw-semibold mb-0 mt-3 ">Cost:</p>
+                    <div class="ps-2 mb-3">
+                        <div class="form-check m-0 ">
+                            <input class="form-check-input " value="free" type="check" name="new_cost" id="new_cost"
+                                <?php echo ($new_cost == 'free') ? 'checked="checked"' : ""; ?>>
+                            <label class="form-check-label" for="new_cost">
+                                Bluetooth
+                            </label>
+                        </div>
+                        <div class="form-check m-0">
+                            <input class="form-check-input" value="$" type="radio" name="new_cost" id="new_cost"
+                                <?php echo $new_cost == '$' ? 'checked="checked"' : ''; ?>>
+                            <label class="form-check-label" for="new_cost">
+                                2.4
+                            </label>
+                        </div>
+                        <div class="form-check m-0">
+                            <input class="form-check-input" value="$$" type="radio" name="new_cost" id="new_cost"
+                                <?php echo ($new_cost == '$$') ? 'checked="checked"' : ''; ?>>
+                            <label class="form-check-label" for="new_cost">
+                                Wired
+                            </label>
+                        </div>
                     </div>
+                </div>
+
                     <!-- Hidden Values -->
                     <input type="hidden" name="attraction_id" value="<?php echo $attraction_id; ?>">
                     <!-- Because we're storing our city id number in $_GET, we need to include it here again; otherwise, we may lose it when we submit the form and nothing will happen. -->
