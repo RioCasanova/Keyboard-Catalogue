@@ -25,19 +25,30 @@ if (isset($_POST["logout"])) {
 
 #region Variables
 
+// text
+$add_name = isset($_POST['add_name']) ? trim($_POST['add_name']) : "";
 $add_brand = isset($_POST['brand']) ? trim($_POST['brand']) : "";
-$add_rgb = isset($_POST['rgb']) ? $_POST['rgb'] : 0;
-$add_led_type = isset($_POST['led_type']) ? trim($_POST['led_type']) : "";
-$add_size = isset($_POST['size']) ? trim($_POST['size']) : "";
 $add_price = isset($_POST['price']) ? $_POST['price'] : 0;
-$add_connectivity = isset($_POST['connectivity']) ? trim($_POST['connectivity']) : "";
-$add_name = isset($_POST['name']) ? trim($_POST['name']) : "";
-$add_case_material = isset($_POST['case_material']) ? trim($_POST['case_material']) : "";
 $add_color = isset($_POST['color']) ? trim($_POST['color']) : "";
-$add_image = isset($_POST['image']) ? trim($_POST['image']) : "";
 $add_site = isset($_POST['site']) ? trim($_POST['site']) : "";
 $add_description = isset($_POST['description']) ? trim($_POST['description']) : "";
 $add_youtube_link = isset($_POST['youtube_link']) ? trim($_POST['youtube_link']) : "";
+
+// radio
+$add_rgb = isset($_POST['rgb']) ? $_POST['rgb'] : 0;
+
+// select
+$add_led_type = isset($_POST['led_type']) ? trim($_POST['led_type']) : "";
+$add_size = isset($_POST['size']) ? trim($_POST['size']) : "";
+$add_case_material = isset($_POST['case_material']) ? trim($_POST['case_material']) : "";
+
+// checkboxes
+$add_connectivity = isset($_POST['connectivity']) ? trim($_POST['connectivity']) : "";
+
+// upload file
+$add_image = isset($_POST['image']) ? trim($_POST['image']) : "";
+
+
 
 #endregion
 
@@ -57,6 +68,63 @@ if (isset($_POST["submit"])) {
     if ($_FILES['myfile']['size'] > (4 * 1024 * 1024)) {
         $proceed = false;
         $update_message .= "<p>File is too large</p>";
+    }
+
+    
+    // KEYBOARD NAME
+    $add_name = filter_var($add_name, FILTER_SANITIZE_STRING);
+    $add_name = mysqli_real_escape_string($connection, $add_name);
+    if (strlen($add_name) < 2 || strlen($add_name) > 30) {
+        $proceed = false;
+        $update_message .= "\n<p>Please enter a keyboard name that is between 2 and 30 characters in length.</p>";
+    }
+
+    // KEYBOARD BRAND
+    $add_brand = filter_var($add_brand, FILTER_SANITIZE_STRING);
+    $add_brand = mysqli_real_escape_string($connection, $add_brand);
+    if (strlen($add_brand) < 2 || strlen($add_brand) > 30) {
+        $proceed = false;
+        $update_message .= "\n<p>Please enter a keyboard brand that is between 2 and 30 characters in length.</p>";
+    }
+
+    // KEYBOARD PRICE
+    $add_price = filter_var($add_price, FILTER_SANITIZE_STRING);
+    $add_price = mysqli_real_escape_string($connection, $add_price);
+    if (strlen($add_price) < 2 || strlen($add_price) > 6) {
+        $proceed = false;
+        $update_message .= "\n<p>Please enter a keyboard price that is between 2 and 6 characters in length -- its not a corvette...</p>";
+    }
+    
+    // KEYBOARD COLOR -- there can be multiple
+    $add_color = filter_var($add_color, FILTER_SANITIZE_STRING);
+    $add_color = mysqli_real_escape_string($connection, $add_color);
+    if (strlen($add_color) < 2 || strlen($add_color) > 50) {
+        $proceed = false;
+        $update_message .= "\n<p>Please enter a keyboard color that is between 2 and 50 characters in length.</p>";
+    }
+
+    // KEYBOARD DESCRIPTION
+    $new_description = filter_var($new_description, FILTER_SANITIZE_STRING);
+    $new_description = mysqli_real_escape_string($connection, $new_description);
+    if (strlen($new_description) < 2 || strlen($new_description) > 250) {
+        $proceed = false;
+        $update_message .= "\n<p>Please enter a description that is either less than 250 characters or more than 2.</p>";
+    }
+
+    // KEYBOARD SITE 
+    $new_description = filter_var($new_description, FILTER_SANITIZE_STRING);
+    $new_description = mysqli_real_escape_string($connection, $new_description);
+    if (strlen($new_description) < 2 || strlen($new_description) > 250) {
+        $proceed = false;
+        $update_message .= "\n<p>Please enter a description that is either less than 250 characters or more than 2.</p>";
+    }
+
+    // KEYBOARD YOUTUBE
+    $new_description = filter_var($new_description, FILTER_SANITIZE_STRING);
+    $new_description = mysqli_real_escape_string($connection, $new_description);
+    if (strlen($new_description) < 2 || strlen($new_description) > 250) {
+        $proceed = false;
+        $update_message .= "\n<p>Please enter a description that is either less than 250 characters or more than 2.</p>";
     }
 
     // CATEGORY
@@ -83,21 +151,9 @@ if (isset($_POST["submit"])) {
         $update_message .= "\n<p>Please choose a season.</p>";
     }
 
-    // DESCRIPTION
-    $new_description = filter_var($new_description, FILTER_SANITIZE_STRING);
-    $new_description = mysqli_real_escape_string($connection, $new_description);
-    if (strlen($new_description) < 2 || strlen($new_description) > 500) {
-        $proceed = false;
-        $update_message .= "\n<p>Please enter a description that is either less than 500 characters or more than 2.</p>";
-    }
 
-    // ATTRACTION NAME
-    $new_attraction_name = filter_var($new_attraction_name, FILTER_SANITIZE_STRING);
-    $new_attraction_name = mysqli_real_escape_string($connection, $new_attraction_name);
-    if (strlen($new_attraction_name) < 2 || strlen($new_attraction_name) > 30) {
-        $proceed = false;
-        $update_message .= "\n<p>Please enter an attraction name that is between 2 and 30 characters in length.</p>";
-    }
+
+
 
     // URL
     if ($new_url) {
@@ -125,9 +181,9 @@ if (isset($_POST["submit"])) {
     }
 
     if ($proceed == true) {
-        insert_attraction($new_attraction_name, $new_category, $new_cost, $new_address, $new_url, $new_description, $new_rating, $new_area_of_town, $new_family_friendly, $new_season);
-        $message = "<p>Attraction added successfully</p>";
-        $new_attraction_name = "";
+        insert_keyboard($add_brand, $new_category, $new_cost, $new_address, $new_url, $new_description, $new_rating, $new_area_of_town, $new_family_friendly, $new_season);
+        $update_message = "<p>Keyboard added successfully</p>";
+        $add_name = "";
         $new_category = "";
         $new_cost = "";
         $new_address = "";
@@ -225,9 +281,9 @@ There shouldn't be a need for a delete navigation page, it should only be access
 
                 <!-- ATTRACTION NAME -->
                 <div class="mb-3">
-                    <label for="new_attraction_name" class="form-label fw-semibold">Attraction Name:</label>
-                    <input type="text" id="new_attraction_name" name="new_attraction_name" class="form-control"
-                        value="<?php echo isset($_POST['new_attraction_name']) ? $_POST['new_attraction_name'] : "" ?>">
+                    <label for="add_name" class="form-label fw-semibold">Attraction Name:</label>
+                    <input type="text" id="add_name" name="add_name" class="form-control"
+                        value="<?php echo isset($_POST['add_name']) ? $_POST['add_name'] : "" ?>">
                 </div>
 
                 <!-- CATEGORY -->

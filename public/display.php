@@ -24,6 +24,8 @@ if (isset($_GET['keyboard_id'])) {
 
 
 ?>
+
+
 <div class="mt-5">
     <?php
     // your challenge. Loop thru the DB, and write out <img> tag for all your images. path to your thumbs200 dir
