@@ -138,6 +138,35 @@ if (isset($_POST["submit"])) {
         $new_family_friendly = 0;
         $new_season = "";
 
+        if (move_uploaded_file($_FILES['myfile']['tmp_name'], "_uploads/" . $_FILES['myfile']['name'])) {
+
+            // grabing the source file (stored image)
+            $thisFile = "_uploads/" . $_FILES['myfile']['name']; 
+
+
+            // creating thumbnail for gallery
+            $thisFolder = "_thumbs200/";
+            $thisWidth = 200;
+                // function call
+            createSquareImageCopy($thisFile, $thisFolder, $thisWidth);
+
+            // creating usable image for display page
+            $thisFolder = "_display800/";
+            $thisWidth = 800;
+                 // function call
+            createImageCopy($thisFile, $thisFolder, $thisWidth, 0);
+
+
+            // adding image name to db
+            $filename = $_FILES['myfile']['name'];
+            mysqli_query($connection, "INSERT INTO keyboards(image) VALUES('$filename')");
+
+
+            echo "<h3 class=\"alert alert-success\">Upload Successful</h3>";
+        } else {
+            echo "<h3 class=\"alert alert-danger\">ERROR" . $_FILES['myfile']['error'] . "</div>";
+        }
+        
     } else {
         global $connection;
         $message = "<p>There was an issue: " . $connection->error . "</p>";
