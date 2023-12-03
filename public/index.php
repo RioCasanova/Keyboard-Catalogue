@@ -1,7 +1,6 @@
-<?php include("includes/header.php") ?>
-<?php require_once("/home/rcasanova2/data/connect.php"); ?>
-<?php require_once("../private/prepared.php"); ?>
 <?php
+
+#region App Info
 //  ****************************************************************************************************
 // Created By: Rio Casanova
 // Purpose: CRUD SQL Configuration back-end for a front-end keyboard application
@@ -17,19 +16,43 @@
 //           functionality and thumbnails.
 //  *******************************************************************************************************
 
+#endregion
 
-$attraction_id = isset($_GET['id']) ? $_GET['id'] : "";
-if (isset($_GET['id'])) {
-    $attraction_id = $_GET['id'];
-} elseif (isset($_POST['id'])) {
-    $attraction_id = $_POST['id'];
+#region Imports
+
+require_once("/home/rcasanova2/data/connect.php");
+require_once("../private/prepared.php");
+
+#endregion
+
+#region Variables
+$keyboard_id = isset($_GET['keyboard_id']) ? $_GET['keyboard_id'] : "";
+if (isset($_GET['keyboard_id'])) {
+    $keyboard_id = $_GET['keyboard_id'];
+} elseif (isset($_POST['keyboard_id'])) {
+    $keyboard_id = $_POST['keyboard_id'];
 } else {
-    $attraction_id = "";
+    $keyboard_id = "";
 }
+$brand = isset($_GET['brand']) ? $_GET['brand'] : "";
+$rgb = isset($_GET['rgb']) ? $_GET['rgb'] : 0;
+$led_type = isset($_GET['led_type']) ? $_GET['led_type'] : "";
+$size = isset($_GET['size']) ? $_GET['size'] : "";
+$price = isset($_GET['price']) ? $_GET['price'] : 0;
+$connectivity = isset($_GET['connectivity']) ? $_GET['connectivity'] : "";
 
-$category = isset($_GET['category']) ? $_GET['category'] : "";
-?>
-<!-- We are trying to filter our results by the Category - so we want to use the category column and pass it into the URL -->
+// Also attributes -- but will not be filtered by
+$name = isset($_GET['name']) ? $_GET['name'] : "";
+$case_material = isset($_GET['case_material']) ? $_GET['case_material'] : 0;
+$color = isset($_GET['color']) ? $_GET['color'] : "";
+$image = isset($_GET['image']) ? $_GET['image'] : "";
+$site = isset($_GET['site']) ? $_GET['site'] : 0;
+$description = isset($_GET['description']) ? $_GET['description'] : "";
+$youtube_link = isset($_GET['$youtube_link']) ? $_GET['$youtube_link'] : "";
+#endregion
+
+include("includes/header.php") ?> <!--***********************************-->
+
 
 <body class="container">
     <header class="mt-5">
@@ -46,36 +69,39 @@ $category = isset($_GET['category']) ? $_GET['category'] : "";
     </header>
     <main>
         <section class="mb-4">
-            <h2 class="fw-bold mt-5 mb-3">Browse by Category:</h2>
+
+            <!-- Filter options here -->
+
+            <!-- <h2 class="fw-bold mt-5 mb-3">Browse by:</h2>
             <div class="text-center">
                 <button class="btn btn-outline-primary m-2">
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Shopping"
-                        class="text-decoration-none text-reset">Shopping</a>
+                        class="text-decoration-none text-reset">Brand</a>
                 </button>
                 <button class="btn btn-outline-secondary m-2">
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Historical%20Buildings%20%26%20Monuments"
                         class="text-decoration-none text-reset">
-                        Historical Buildings & Monuments</a>
+                        RGB</a>
                 </button>
                 <button class="btn btn-outline-success m-2">
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Parks%20%26%20Natural%20Attractions"
-                        class="text-decoration-none text-reset">Parks & Natural Attractions</a>
+                        class="text-decoration-none text-reset">LED</a>
                 </button>
                 <button class="btn btn-outline-danger m-2">
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Fine%20Arts"
-                        class="text-decoration-none text-reset">Fine Arts</a>
+                        class="text-decoration-none text-reset">60%</a>
                 </button>
                 <button class="btn btn-outline-warning m-2">
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Science%20%26%20Technology"
-                        class="text-decoration-none text-reset">Science & Technology</a>
+                        class="text-decoration-none text-reset">65%</a>
                 </button>
                 <button class="btn btn-outline-info m-2">
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Live%20Music%20%26%20Theatre"
-                        class="text-decoration-none text-reset">Live Music & Theatre</a>
+                        class="text-decoration-none text-reset">75%</a>
                 </button>
                 <button class="btn btn-outline-dark m-2">
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Recreational%20Facilities"
-                        class="text-decoration-none text-reset">Recreational Facilities</a>
+                        class="text-decoration-none text-reset">98%</a>
                 </button>
                 <button class="btn btn-outline-primary m-2">
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Year-Round%20Attractions"
@@ -89,34 +115,35 @@ $category = isset($_GET['category']) ? $_GET['category'] : "";
                     <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Festivals"
                         class="text-decoration-none text-reset">Festivals</a>
                 </button>
-            </div>
+            </div> -->
+
+
+            <!-- Display items -- Gallery -->
             <div>
                 <?php
-
-
-                if (isset($_GET['category']) && !empty($_GET['category'])) {
-                    $attractions = filter_by_category();
-                } else {
-                    $attractions = get_all_attractions();
-                }
-
+                // if (isset($_GET['category']) && !empty($_GET['category'])) {
+                //     $attractions = filter_by_category();
+                // } else {
+                
+                // }
+                $keyboards = get_all_keyboards();
                 ?>
 
                 <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
-                    <?php foreach ($attractions as $x) { ?>
-                        <div class="col">
+                    <?php foreach ($keyboards as $x) { ?>
+                        <div class="col card">
+                            <img src="_thumbs200/<?php echo $x['image'] ?>" class="card-img-top img-thumbnail"
+                                alt="picture of keyboard">
                             <div class="card card-body h-100">
                                 <?php
                                 echo "<h4 class=\"card-title\"><b>" . $x['name'] . "</b></h4>";
-                                echo "<h5 class=\"text-muted card-text\">" . $x['category'] . "</h5>";
-                                echo "<p class=\"card-text\"><b>Cost: </b>" . $x['cost'] . "</p>";
-                                echo "<p class=\"card-text\"><b>Area of Town: </b>" . $x['area_of_town'] . "</p>";
-                                echo "<p class=\"card-text\"><b>Season: </b>" . $x['season'] . "</p>";
-                                echo "<p class=\"card-text\"><b>Address: </b>" . $x['address'] . "</p>";
-                                echo "<p class=\"card-text\">" . $x['description'] . "</p>";
-                                echo "<p><b>Rating: </b>" . $x['rating'] . "</p>";
-                                echo $x['family_friendly'] == true ? "<p class=\"text-success\">Family Friendly</p>" : "<p class=\"text-warning\">For Adults</p>";
-                                echo "<p class=\"card-text\">" . "<a href='" . $x['url'] . "'>Visit Website</a>" . "</p>";
+                                echo "<h5 class=\"text-muted card-text\">" . $x['brand'] . "</h5>";
+                                echo "<p class=\"card-text\"><b>Cost: </b>" . $x['price'] . "</p>";
+                                echo "<p class=\"card-text\"><b>RGB: </b>" . $x['rgb'] . "</p>";
+                                echo "<p class=\"card-text\"><b>LED: </b>" . $x['led_type'] . "</p>";
+                                echo "<p class=\"card-text\"><b>Size: </b>" . $x['size'] . "</p>";
+                                echo "<p class=\"card-text\"><b>Connectivity: </b>" . $x['connectivity'] . "</p>";
+                                echo "<p class=\"card-text\"><a href=\"display.php/" . $x['keyboard_id'] . "\">View</a></p>";
                                 ?>
                             </div>
                         </div>

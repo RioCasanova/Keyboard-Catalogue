@@ -1,6 +1,12 @@
-<?php require_once("/home/rcasanova2/data/connect.php"); ?>
-<?php require_once("../private/prepared.php"); ?>
 <?php
+#region Imports
+
+require_once("/home/rcasanova2/data/connect.php");
+require_once("../private/prepared.php");
+
+#endregion
+
+#region Session
 session_start();
 if (isset($_SESSION['spiderman'])) {
 
@@ -14,39 +20,59 @@ if (isset($_POST["logout"])) {
     session_destroy();
     header("Location:index.php");
 }
-    $new_attraction_name = isset($_POST['new_attraction_name']) ? trim($_POST['new_attraction_name']) : "";
-    $new_category = isset($_POST['new_category']) ? trim($_POST['new_category']) : "";
-    $new_cost = isset($_POST['new_cost']) ? trim($_POST['new_cost']) : "";
-    $new_address = isset($_POST['new_address']) ? trim($_POST['new_address']) : "";
-    $new_url = isset($_POST['new_url']) ? trim($_POST['new_url']) : "";
-    $new_rating = isset($_POST['new_rating']) ? trim($_POST['new_rating']) : "";
-    $new_description = isset($_POST['new_description']) ? trim($_POST['new_description']) : trim("");
-    $new_area_of_town = isset($_POST['new_area']) ? trim($_POST['new_area']) : "";
-    $new_family_friendly = isset($_POST['new_friendly']) ? 1 : 0;
-    $new_season = isset($_POST['new_season']) ? trim($_POST['new_season']) : "";
 
+#endregion
 
+#region Variables
 
+$add_brand = isset($_POST['brand']) ? trim($_POST['brand']) : "";
+$add_rgb = isset($_POST['rgb']) ? $_POST['rgb'] : 0;
+$add_led_type = isset($_POST['led_type']) ? trim($_POST['led_type']) : "";
+$add_size = isset($_POST['size']) ? trim($_POST['size']) : "";
+$add_price = isset($_POST['price']) ? $_POST['price'] : 0;
+$add_connectivity = isset($_POST['connectivity']) ? trim($_POST['connectivity']) : "";
+$add_name = isset($_POST['name']) ? trim($_POST['name']) : "";
+$add_case_material = isset($_POST['case_material']) ? trim($_POST['case_material']) : "";
+$add_color = isset($_POST['color']) ? trim($_POST['color']) : "";
+$add_image = isset($_POST['image']) ? trim($_POST['image']) : "";
+$add_site = isset($_POST['site']) ? trim($_POST['site']) : "";
+$add_description = isset($_POST['description']) ? trim($_POST['description']) : "";
+$add_youtube_link = isset($_POST['youtube_link']) ? trim($_POST['youtube_link']) : "";
+
+#endregion
+
+#region Validation & Configuration
 
 if (isset($_POST["submit"])) {
     $update_message = ""; // cumulitave validation message
     $proceed = true; // Bool for whether validation has passed
     extract($_POST);
 
+
+    // IMAGES
+    if ($_FILES['myfile']['type'] != "image/jpeg") {
+        $proceed = false;
+        $update_message .= "<p>Not a JPG image.</p>";
+    }
+    if ($_FILES['myfile']['size'] > (4 * 1024 * 1024)) {
+        $proceed = false;
+        $update_message .= "<p>File is too large</p>";
+    }
+
     // CATEGORY
-    if ($new_category == 'null') {
+    if ($add_category == 'null') {
         $proceed = false;
         $update_message .= "\n<p>Please choose a category.</p>";
     }
 
     // RATING
-    if ($new_rating == '0') {
+    if ($add_rating == '0') {
         $proceed = false;
         $update_message .= "\n<p>Please choose a rating.</p>";
     }
 
     // AREA OF TOWN
-    if ($new_area_of_town == 'nowhere') {
+    if ($add_area_of_town == 'nowhere') {
         $proceed = false;
         $update_message .= "\n<p>Please choose an area of Edmonton.</p>";
     }
@@ -117,8 +143,10 @@ if (isset($_POST["submit"])) {
         $message = "<p>There was an issue: " . $connection->error . "</p>";
     }
 }
-?>
-<?php include("includes/header.php") ?>
+
+#endregion
+
+include("includes/header.php") ?> <!--***********************************-->
 <!-- On this add page I want the navigation to have a home button, and a button to go to the edit page
 There shouldn't be a need for a delete navigation page, it should only be accessible from the edit page -->
 
@@ -153,13 +181,18 @@ There shouldn't be a need for a delete navigation page, it should only be access
     <main class="container">
         <section class="justify-content-center row">
             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
-                class="mb-5 formstyle col-lg-8 border border-primary p-4 mb-2 border-opacity-25 rounded">
+                class="mb-5 formstyle col-lg-8 border border-primary p-4 mb-2 border-opacity-25 rounded" enctype="multipart/form-data">
                 <?php if (isset($message)): ?>
                     <div class="alert alert-success">
                         <?php echo $message; ?>
                     </div>
                 <?php endif; ?>
 
+                <!-- FILE UPLOAD -->
+                <div class="mb-3">
+                    <label for="myfile" class="form-label">File</label>
+                    <input type="file" class="form-control" id="myfile" name="myfile">
+                </div>
 
                 <!-- ATTRACTION NAME -->
                 <div class="mb-3">

@@ -1,0 +1,1 @@
+<!-- For individual display of keyboard information and photos -->

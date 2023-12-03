@@ -1,6 +1,12 @@
-<?php require_once("/home/rcasanova2/data/connect.php"); ?>
 <?php
 
+#region Imports
+
+require_once("/home/rcasanova2/data/connect.php");
+
+#endregion
+
+#region App Info
 //  ****************************************************************************************************
 // Created By: Rio Casanova
 // Purpose: CRUD SQL Configuration back-end for a front-end keyboard application
@@ -15,6 +21,7 @@
 //           assignment. The difference is that this assignment uses photo uploading 
 //           functionality and thumbnails.
 //  *******************************************************************************************************
+#endregion
 
 // ------------------------------------------ HOMEPAGE *****************************************************
 function get_all_keyboards() // diasplays all items in database 'keyboards'
@@ -34,7 +41,9 @@ function get_all_keyboards() // diasplays all items in database 'keyboards'
     }
     return $atts; // associative array
 }
-// ------------------------------------------ FILTERS *****************************************************
+
+#region Filters *****************************************************
+
 
 // LOAD RESULTS ACCORDING TO: brand
 function filter_by_brand()
@@ -188,17 +197,17 @@ function filter_by_connectivity()
     return $atts;
 }
 
-
+#endregion
 
 // ------------------------------------------ INSERT *****************************************************
 
 
 
-function insert_keyboard($keyboard_name, $brand, $cost, $address, $url, $description, $rating, $area, $friendly, $season)
+function insert_keyboard($keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link)
 {
     global $connection;
-    $insert_statement = $connection->prepare("INSERT INTO rcasanova2_attractions(name, category, cost, address, url, description, rating, area_of_town, family_friendly, season) VALUES(?,?,?,?,?,?,?,?,?,?)");
-    $insert_statement->bind_param("ssssssisis", $keyboard_name, $brand, $cost, $address, $url, $description, $rating, $area, $friendly, $season);
+    $insert_statement = $connection->prepare("INSERT INTO keyboards(name, brand, price, rgb, led_type, description, size, connectivity, case_material, color, image, site, youtube_link) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    $insert_statement->bind_param("ssiisssssssss", $keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link);
     if (!$insert_statement->execute()) {
         handle_database_error("inserting keyboard record");
     }
@@ -209,7 +218,7 @@ function insert_keyboard($keyboard_name, $brand, $cost, $address, $url, $descrip
 function keyboard_by_id($keyboard_id)
 {
     global $connection;
-    $select_by_id_sql = $connection->prepare("SELECT * FROM rcasanova2_attractions WHERE id = ?");
+    $select_by_id_sql = $connection->prepare("SELECT * FROM keyboards WHERE id = ?");
     $select_by_id_sql->bind_param("i", $keyboard_id);
     if (!$select_by_id_sql->execute()) {
         handle_database_error("Selecting keyboard by id");
@@ -221,15 +230,15 @@ function keyboard_by_id($keyboard_id)
 }
 
 // ------------------------------------------ UPDATE *****************************************************
-function update_keyboard($attraction_name, $category, $cost, $address, $url, $description, $rating, $area, $friendly, $season, $attraction_id)
+function update_keyboard($keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link, $keyboard_id)
 {
     global $connection;
     $update_statement =
         $connection->prepare("UPDATE rcasanova2_attractions 
-                      SET name = ?, category = ?, cost = ?, address = ?, url = ?, description = ?, rating = ?, area_of_town = ?, family_friendly = ?, season = ? 
+                      SET name = ?, brand = ?, price = ?, rgb = ?, led_type = ?, description = ?, size = ?, connectivity = ?, case_material = ?, color = ?, image = ?, site = ?, youtube_link = ?
                       WHERE id = ?");
 
-    $update_statement->bind_param("ssssssisisi", $attraction_name, $category, $cost, $address, $url, $description, $rating, $area, $friendly, $season, $attraction_id);
+    $update_statement->bind_param("ssiisssssssssi", $keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link, $keyboard_id);
     $update_statement->execute();
     if (!$update_statement->execute()) {
         handle_database_error("updating keyboard record");
@@ -242,13 +251,97 @@ function update_keyboard($attraction_name, $category, $cost, $address, $url, $de
 function delete_keyboard($keyboard_id)
 {
     global $connection;
-    $delete_statement = $connection->prepare("DELETE FROM rcasanova2_attractions WHERE id = ?");
+    $delete_statement = $connection->prepare("DELETE FROM keyboards WHERE id = ?");
     $delete_statement->bind_param("i", $keyboard_id);
     $delete_statement->execute();
     if (!$delete_statement->execute()) {
         handle_database_error("deleting keyboard record");
     }
 }
+
+#region Image Functions *****************************************************
+
+
+// creates and stores image
+function createImageCopy($file, $folder, $newWidth, $showThumb = 1)
+{
+
+    list($width, $height) = getimagesize($file);
+    $imgRatio = $width / $height;
+    $newHeight = $newWidth / $imgRatio;
+
+    //echo "<p>$newWidth; $newHeight; $imgRatio</p>";
+    $thumb = imagecreatetruecolor($newWidth, $newHeight);
+    $source = imagecreatefromjpeg($file);
+
+    imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+    $fileName = $folder . $_FILES['myfile']['name'];
+
+    imagejpeg($thumb, $fileName, 80); // 80 here is the JPEG quality
+
+    imagedestroy($thumb);
+    imagedestroy($source);
+
+    // if($showThumb == 1){// just so we only show the thumbnail image once.
+    //     echo "<img src=\"thumbs200/". $_FILES['myfile']['name'] ."\">";
+    // }
+
+}
+
+// creates thumbnail
+function createSquareImageCopy($file, $folder, $newWidth)
+{
+
+    //echo "$filename, $folder, $newWidth";
+    //exit();
+
+    $thumb_width = $newWidth;
+    $thumb_height = $newWidth; // tweak this for ratio
+
+    list($width, $height) = getimagesize($file);
+
+    $original_aspect = $width / $height;
+    $thumb_aspect = $thumb_width / $thumb_height;
+
+    if ($original_aspect >= $thumb_aspect) {
+        // If image is wider than thumbnail (in aspect ratio sense)
+        $new_height = $thumb_height;
+        $new_width = $width / ($height / $thumb_height);
+    } else {
+        // If the thumbnail is wider than the image
+        $new_width = $thumb_width;
+        $new_height = $height / ($width / $thumb_width);
+    }
+
+    $source = imagecreatefromjpeg($file);
+    $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
+
+    // Resize and crop
+    imagecopyresampled(
+        $thumb,
+        $source,
+        0 - ($new_width - $thumb_width) / 2, // Center the image horizontally
+        0 - ($new_height - $thumb_height) / 2, // Center the image vertically
+        0,
+        0,
+        $new_width,
+        $new_height,
+        $width,
+        $height
+    );
+
+    $newFileName = $folder . "/" . basename($file);
+    imagejpeg($thumb, $newFileName, 80);
+
+    //echo "<p><img src=\"$newFileName\" /></p>"; // if you want to see the image
+
+    echo "<img src=\"_thumbs200/" . $_FILES['myfile']['name'] . "\">";
+}
+
+
+#endregion
+
 
 // ------------------------------------------ HELPERS *****************************************************
 function handle_database_error($statement)

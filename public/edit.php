@@ -1,6 +1,13 @@
-<?php require_once("/home/rcasanova2/data/connect.php"); ?>
-<?php require_once("../private/prepared.php"); ?>
 <?php
+
+#region Imports
+
+require_once("/home/rcasanova2/data/connect.php");
+require_once("../private/prepared.php");
+
+#endregion
+
+#region Session
 session_start();
 if (isset($_SESSION['spiderman'])) {
     $txtMsg = "You are now logged in";
@@ -16,19 +23,18 @@ if (isset($_POST["logout"])) {
     session_destroy();
     header("Location:index.php");
 }
+#endregion
 
-
-
-$attraction_id = isset($_GET['attraction_id']) ? $_GET['attraction_id'] : "";
-if (isset($_GET['attraction_id'])) {
-    $attraction_id = $_GET['attraction_id'];
-} elseif (isset($_POST['attraction_id'])) {
-    $attraction_id = $_POST['attraction_id'];
+#region Variables & Configuration
+$keyboard_id = isset($_GET['keyboard_id']) ? $_GET['keyboard_id'] : "";
+if (isset($_GET['keyboard_id'])) {
+    $keyboard_id = $_GET['keyboard_id'];
+} elseif (isset($_POST['keyboard_id'])) {
+    $keyboard_id = $_POST['keyboard_id'];
 } else {
-    $attraction_id = "";
+    $keyboard_id = "";
 }
 
-// Define variables
 $message = "";
 $update_message = "";
 
@@ -73,6 +79,10 @@ if (isset($attraction_id) && $attraction_id > 0) {
         echo "<p>No record of that</p>";
     }
 }
+#endregion
+
+#region Validation
+
 
 if (isset($_POST['submit'])) {
 
@@ -148,10 +158,11 @@ if (isset($_POST['delete'])) {
     $message = "<p>" . $existing_name . " successfully removed.</p>";
     $attraction_id = "";
 }
-?>
 
+#endregion
 
-<?php include("includes/header.php") ?>
+include("includes/header.php") ?> <!--***********************************-->
+
 
 <body class="container">
     <header class="mt-5">
