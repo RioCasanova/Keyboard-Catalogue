@@ -43,7 +43,7 @@ $add_size = isset($_POST['size']) ? trim($_POST['size']) : "";
 $add_case_material = isset($_POST['case_material']) ? trim($_POST['case_material']) : "";
 
 // checkboxes
-$add_connectivity = isset($_POST['connectivity']) ? trim($_POST['connectivity']) : "";
+$add_connectivity[] =+ isset($_POST['connectivity']) ? trim($_POST['connectivity']) : "";
 
 // upload file
 $add_image = isset($_POST['image']) ? trim($_POST['image']) : "";
@@ -104,95 +104,76 @@ if (isset($_POST["submit"])) {
     }
 
     // KEYBOARD DESCRIPTION
-    $new_description = filter_var($new_description, FILTER_SANITIZE_STRING);
-    $new_description = mysqli_real_escape_string($connection, $new_description);
-    if (strlen($new_description) < 2 || strlen($new_description) > 250) {
+    $add_description = filter_var($add_description, FILTER_SANITIZE_STRING);
+    $add_description = mysqli_real_escape_string($connection, $add_description);
+    if (strlen($add_description) < 2 || strlen($add_description) > 250) {
         $proceed = false;
         $update_message .= "\n<p>Please enter a description that is either less than 250 characters or more than 2.</p>";
     }
 
     // KEYBOARD SITE 
-    $new_description = filter_var($new_description, FILTER_SANITIZE_STRING);
-    $new_description = mysqli_real_escape_string($connection, $new_description);
-    if (strlen($new_description) < 2 || strlen($new_description) > 250) {
+    $add_site = filter_var($add_site, FILTER_SANITIZE_STRING);
+    $add_site = mysqli_real_escape_string($connection, $add_site);
+    if (strlen($add_site) < 2 || strlen($add_site) > 250) {
         $proceed = false;
-        $update_message .= "\n<p>Please enter a description that is either less than 250 characters or more than 2.</p>";
+        $update_message .= "\n<p>Please enter a link that is either less than 250 characters or more than 2.</p>";
     }
 
     // KEYBOARD YOUTUBE
-    $new_description = filter_var($new_description, FILTER_SANITIZE_STRING);
-    $new_description = mysqli_real_escape_string($connection, $new_description);
-    if (strlen($new_description) < 2 || strlen($new_description) > 250) {
+    $add_youtube_link = filter_var($add_youtube_link, FILTER_SANITIZE_STRING);
+    $add_youtube_link = mysqli_real_escape_string($connection, $add_youtube_link);
+    if (strlen($add_youtube_link) < 2 || strlen($add_youtube_link) > 250) {
         $proceed = false;
-        $update_message .= "\n<p>Please enter a description that is either less than 250 characters or more than 2.</p>";
+        $update_message .= "\n<p>That link is too long</p>";
     }
 
-    // CATEGORY
-    if ($add_category == 'null') {
+    // KEYBOARD RGB
+    if ($add_rgb == 'null' || $add_rgb == "") {
         $proceed = false;
-        $update_message .= "\n<p>Please choose a category.</p>";
+        $update_message .= "\n<p>Please verify backlighting.</p>";
     }
 
-    // RATING
-    if ($add_rating == '0') {
+    // KEYBOARD LED_TYPE
+    if ($add_led_type == '0') {
         $proceed = false;
-        $update_message .= "\n<p>Please choose a rating.</p>";
+        $update_message .= "\n<p>Please choose an led type.</p>";
     }
 
-    // AREA OF TOWN
-    if ($add_area_of_town == 'nowhere') {
+    // KEYBOARD CASE MATERIAL
+    if ($add_case_material == 'select') {
         $proceed = false;
-        $update_message .= "\n<p>Please choose an area of Edmonton.</p>";
+        $update_message .= "\n<p>Please choose a case material.</p>";
     }
 
-    // SEASON
-    if ($new_season == 'construction') {
+    // KEYBOARD SIZE
+    if ($add_size == 'select') {
         $proceed = false;
-        $update_message .= "\n<p>Please choose a season.</p>";
+        $update_message .= "\n<p>Please choose a size.</p>";
     }
 
-
-
-
-
-    // URL
-    if ($new_url) {
-        $new_url = filter_var($new_url, FILTER_SANITIZE_URL);
-        $url_arr = get_headers($new_url);
-        $response = $url_arr[0];
-        if (strpos($response, "200")) {
-    
-        } else {
-            $proceed = false;
-            $update_message .= "\n<p>URL INVALID: Please enter a URL that leads to a current site. If there is not site to be entered, lead the link back to the home page.</p>";
-        }
-    } else {
+    // KEYBOARD CONNECTIVITY
+    if ($add_connectivity == null || $add_connectivity == "") {
         $proceed = false;
-        $update_message .= "\n<p>Please enter a URL.</p>";
+        $update_message .= "\n<p>Please choose a how the keyboard connects.</p>";
     }
 
 
-    // ADDRESS
-    $new_address = filter_var($new_address, FILTER_SANITIZE_STRING);
-    $new_address = mysqli_real_escape_string($connection, $new_address);
-    if (strlen($new_address) < 2 || strlen($new_address) > 30) {
-        $proceed = false;
-        $update_message .= "\n<p>Please enter an address that is between 2 and 30 characters in length.</p>";
-    }
 
     if ($proceed == true) {
-        insert_keyboard($add_brand, $new_category, $new_cost, $new_address, $new_url, $new_description, $new_rating, $new_area_of_town, $new_family_friendly, $new_season);
+        insert_keyboard($add_name, $add_brand, $add_price, $add_rgb, $add_led_type, $add_description, $add_size, $add_connectivity, $add_case_material, $add_color, $add_image, $add_site, $add_youtube_link);
         $update_message = "<p>Keyboard added successfully</p>";
         $add_name = "";
-        $new_category = "";
-        $new_cost = "";
-        $new_address = "";
-        $new_url = "";
-        $new_rating = "";
-        $new_description = "";
-        $new_area_of_town = "";
-        $new_family_friendly = 0;
-        $new_season = "";
+        $add_brand = "";
+        $add_price = "";
+        $add_rgb = 0;
+        $add_led_type = "";
+        $add_description = "";
+        $add_size = "";
+        $add_connectivity = [];
+        $add_case_material = "";
+        $add_color = "";
+        $add_site = "";
+        $add_youtube_link = "";
 
         if (move_uploaded_file($_FILES['myfile']['tmp_name'], "_uploads/" . $_FILES['myfile']['name'])) {
 
@@ -222,6 +203,8 @@ if (isset($_POST["submit"])) {
         } else {
             echo "<h3 class=\"alert alert-danger\">ERROR" . $_FILES['myfile']['error'] . "</div>";
         }
+
+        $add_image = "";
         
     } else {
         global $connection;
@@ -232,8 +215,7 @@ if (isset($_POST["submit"])) {
 #endregion
 
 include("includes/header.php") ?> <!--***********************************-->
-<!-- On this add page I want the navigation to have a home button, and a button to go to the edit page
-There shouldn't be a need for a delete navigation page, it should only be accessible from the edit page -->
+
 
 <body class="container">
     <header class="mt-5">
