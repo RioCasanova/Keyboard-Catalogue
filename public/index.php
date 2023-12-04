@@ -143,7 +143,7 @@ include("includes/header.php") ?> <!--***********************************-->
                                 echo "<p class=\"card-text\"><b>LED: </b>" . $x['led_type'] . "</p>";
                                 echo "<p class=\"card-text\"><b>Size: </b>" . $x['size'] . "</p>";
                                 echo "<p class=\"card-text\"><b>Connectivity: </b>" . $x['connectivity'] . "</p>";
-                                echo "<p class=\"card-text\"><a href=\"display.php/" . $x['keyboard_id'] . "\">View</a></p>";
+                                echo "<p class=\"card-text\"><a href=\"display.php?keyboard_id=" . $x['keyboard_id'] . "\">View</a></p>";
                                 ?>
                             </div>
                         </div>

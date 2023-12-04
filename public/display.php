@@ -12,13 +12,7 @@ include("includes/header.php");
 #region Variables
 
 $keyboard_id = isset($_GET['keyboard_id']) ? $_GET['keyboard_id'] : 0;
-if (isset($_GET['keyboard_id'])) {
-    $keyboard_id = $_GET['keyboard_id'];
-} elseif (isset($_POST['keyboard_id'])) {
-    $keyboard_id = $_POST['keyboard_id'];
-} else {
-    $keyboard_id = 0;
-}
+
 
 #endregion
 
@@ -37,7 +31,7 @@ if (isset($_GET['keyboard_id'])) {
 
         echo "\n<div>";
         echo "<h2>$name</h2>";
-        echo "\n<img src=\"display800/$filename\" class=\"img-thumbnail\">";
+        echo "\n<img src=\"_display800/$filename\" class=\"img-thumbnail\">";
 
         echo "\n</div>";
     }
