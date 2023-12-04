@@ -203,12 +203,12 @@ function filter_by_connectivity()
 
 
 
-function insert_keyboard($keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link)
+function insert_keyboard($keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $fileName, $site, $youtube_link)
 {
     global $connection;
 
     $insert_statement = $connection->prepare("INSERT INTO keyboards(name, brand, price, rgb, led_type, description, size, connectivity, case_material, color, image, site, youtube_link) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-    $insert_statement->bind_param("ssiisssssssss", $keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link);
+    $insert_statement->bind_param("ssiisssssssss", $keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $fileName, $site, $youtube_link);
     if (!$insert_statement->execute()) {
         handle_database_error("inserting keyboard record");
     }
@@ -337,7 +337,7 @@ function createSquareImageCopy($file, $folder, $newWidth)
 
     //echo "<p><img src=\"$newFileName\" /></p>"; // if you want to see the image
 
-    echo "<img src=\"_thumbs200/" . $_FILES['myfile']['name'] . "\">";
+    // echo "<img src=\"_thumbs200/" . $_FILES['myfile']['name'] . "\">";
 }
 
 

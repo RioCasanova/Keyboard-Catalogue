@@ -35,7 +35,7 @@ $add_description = isset($_POST['add_description']) ? trim($_POST['add_descripti
 $add_youtube_link = isset($_POST['add_youtube_link']) ? trim($_POST['add_youtube_link']) : "";
 
 // radio
-$add_rgb = isset($_POST['add_rgb']) ? $_POST['add_rgb'] : 0;
+$add_rgb = isset($_POST['add_rgb']) ? $_POST['add_rgb'] : null;
 
 // select
 $add_led_type = isset($_POST['add_led_type']) ? trim($_POST['add_led_type']) : "";
@@ -79,7 +79,7 @@ if (isset($_POST["submit"])) {
     // KEYBOARD PRICE
     $add_price = filter_var($add_price, FILTER_SANITIZE_STRING);
     $add_price = mysqli_real_escape_string($connection, $add_price);
-    if (strlen($add_price) < 2 || strlen($add_price) > 6) {
+    if (strlen($add_price) < 2 || strlen($add_price) > 50) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Price Invalid -- see 'Price'</p>";
     }
@@ -117,7 +117,7 @@ if (isset($_POST["submit"])) {
     }
 
     // KEYBOARD RGB
-    if ($add_rgb == []) {
+    if ($add_rgb == null) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard RGB is a required field</p>";
     }
@@ -158,30 +158,19 @@ if (isset($_POST["submit"])) {
     // After form submission logic
     if ($proceed == false) {
         // Store the filename for later use
-        $uploadedFilename = $_FILES['myfile']['add_image'];
+        $uploadedFilename = $_FILES['myfile']['name'];
     }
+}
+#endregion
 
+
+#region Success
+if (isset($_POST["submit"])) {
     if ($proceed == true) {
-        $connectivityString = implode(', ', $add_connectivity);
-        insert_keyboard($add_name, $add_brand, $add_price, $add_rgb, $add_led_type, $add_description, $add_size, $connectivityString, $add_case_material, $add_color, $add_image, $add_site, $add_youtube_link);
-        $update_message = "<p>Keyboard added successfully</p>";
-        $add_name = "";
-        $add_brand = "";
-        $add_price = "";
-        $add_rgb = 0;
-        $add_led_type = "";
-        $add_description = "";
-        $add_size = "";
-        $add_connectivity = [];
-        $add_case_material = "";
-        $add_color = "";
-        $add_site = "";
-        $add_youtube_link = "";
-
-        if (move_uploaded_file($_FILES['myfile']['tmp_name'], "_uploads/" . $_FILES['myfile']['add_image'])) {
+        if (move_uploaded_file($_FILES['myfile']['tmp_name'], "_uploads/" . $_FILES['myfile']['name'])) {
 
             // grabing the source file (stored image)
-            $thisFile = "_uploads/" . $_FILES['myfile']['add_image'];
+            $thisFile = "_uploads/" . $_FILES['myfile']['name'];
 
 
             // creating thumbnail for gallery
@@ -197,17 +186,29 @@ if (isset($_POST["submit"])) {
             createImageCopy($thisFile, $thisFolder, $thisWidth, 0);
 
 
-            // adding image name to db
-            $filename = $_FILES['myfile']['add_image'];
-            mysqli_query($connection, "INSERT INTO keyboards(image) VALUES('$filename')");
+            // calling the instert statement with the information
+            $filename = $_FILES['myfile']['name'];
+            $connectivityString = implode(', ', $add_connectivity);
+            insert_keyboard($add_name, $add_brand, $add_price, $add_rgb, $add_led_type, $add_description, $add_size, $connectivityString, $add_case_material, $add_color, $filename, $add_site, $add_youtube_link);
 
 
-            echo "<h3 class=\"alert alert-success\">Upload Successful</h3>";
+            $success_message = "<p>Keyboard added successfully</p>";
+            $_POST['add_name'] = "";
+            $_POST['add_brand'] = "";
+            $_POST['add_price'] = "";
+            $_POST['add_color'] = "";
+            $add_led_type = "";
+            $add_description = "";
+            $add_size = "";
+            $add_connectivity = [];
+            $add_case_material = "";
+            $_POST['add_site'] = "";
+            $_POST['add_youtube_link'] = "";
+            $add_image = "";
+            $add_rgb = null;
         } else {
             echo "<h3 class=\"alert alert-danger\">ERROR" . $_FILES['myfile']['error'] . "</div>";
         }
-
-        $add_image = "";
 
     } else {
         global $connection;
@@ -216,7 +217,6 @@ if (isset($_POST["submit"])) {
 }
 
 #endregion
-
 include("includes/header.php") ?> <!--***********************************-->
 
 
@@ -252,7 +252,11 @@ include("includes/header.php") ?> <!--***********************************-->
                         <?php echo $update_message; ?>
                     </div>
                 <?php endif; ?>
-
+                <?php if (isset($success_message)): ?>
+                    <div class="alert alert-success">
+                        <?php echo $success_message; ?>
+                    </div>
+                <?php endif; ?>
 
                 <!-- KEYBOARD NAME -->
                 <div class="mb-3">
@@ -417,14 +421,13 @@ include("includes/header.php") ?> <!--***********************************-->
                     <p class="fw-semibold mb-0 mt-3 ">Backlight</p>
                     <div class="ps-2 mb-3">
                         <div class="form-check m-0">
-                            <input class="form-check-input" value="yes" type="radio" name="add_rgb" id="add_rgb_yes"
-                                <?php echo $add_rgb == 'yes' ? 'checked="checked"' : ''; ?>>
+                            <input class="form-check-input" value="1" type="radio" name="add_rgb" id="add_rgb_yes" <?php echo $add_rgb == '1' ? 'checked="checked"' : null; ?>>
                             <label class="form-check-label" for="add_rgb_yes">
                                 RGB
                             </label>
                         </div>
                         <div class="form-check m-0">
-                            <input class="form-check-input" value="no" type="radio" name="add_rgb" id="add_rgb_no" <?php echo ($add_rgb == 'no') ? 'checked="checked"' : ''; ?>>
+                            <input class="form-check-input" value="0" type="radio" name="add_rgb" id="add_rgb_no" <?php echo ($add_rgb == '0') ? 'checked="checked"' : null; ?>>
                             <label class="form-check-label" for="add_rgb_no">
                                 NONE
                             </label>
