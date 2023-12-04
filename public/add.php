@@ -48,9 +48,8 @@ $add_connectivity = isset($_POST['add_connectivity']) ? $_POST['add_connectivity
 // upload file - done
 $add_image = isset($_POST['add_image']) ? trim($_POST['add_image']) : "";
 
-
-
 #endregion
+
 
 #region Validation & Configuration
 
@@ -66,6 +65,7 @@ if (isset($_POST["submit"])) {
     if (strlen($add_name) < 2 || strlen($add_name) > 30) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Name Invalid -- see 'Model/Name'</p>";
+        $message_name = "<p class=\"text-danger m-0\">Model/Name is a required field under 30 characters</p>";
     }
 
     // KEYBOARD BRAND
@@ -74,6 +74,7 @@ if (isset($_POST["submit"])) {
     if (strlen($add_brand) < 2 || strlen($add_brand) > 30) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Brand Invalid -- see 'Brand'</p>";
+        $message_brand = "<p class=\"text-danger m-0\">Brand is a required field under 30 characters</p>";
     }
 
     // KEYBOARD PRICE
@@ -82,6 +83,7 @@ if (isset($_POST["submit"])) {
     if (strlen($add_price) < 2 || strlen($add_price) > 50) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Price Invalid -- see 'Price'</p>";
+        $message_price = "<p class=\"text-danger m-0\">Price is a required field under 30 characters</p>";
     }
 
     // KEYBOARD COLOR -- there can be multiple
@@ -90,6 +92,7 @@ if (isset($_POST["submit"])) {
     if (strlen($add_color) < 2 || strlen($add_color) > 50) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Color(s) Invalid -- see 'Color(s)'</p>";
+        $message_color = "<p class=\"text-danger m-0\">Color is a required field under 30 characters</p>";
     }
 
     // KEYBOARD DESCRIPTION
@@ -98,6 +101,7 @@ if (isset($_POST["submit"])) {
     if (strlen($add_description) < 2 || strlen($add_description) > 250) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Description Invalid -- see 'Description'</p>";
+        $message_description = "<p class=\"text-danger m-0\">Description is a required field under 250 characters</p>";
     }
 
     // KEYBOARD SITE 
@@ -106,6 +110,7 @@ if (isset($_POST["submit"])) {
     if (strlen($add_site) < 2 || strlen($add_site) > 250) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Purchase Site Invalid -- see 'Site'</p>";
+        $message_site = "<p class=\"text-danger m-0\">Purchase Site is a required field under 250 characters</p>";
     }
 
     // KEYBOARD YOUTUBE
@@ -114,42 +119,49 @@ if (isset($_POST["submit"])) {
     if (strlen($add_youtube_link) < 2 || strlen($add_youtube_link) > 250) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Youtube Link Invalid -- see 'Youtube Link'</p>";
+        $message_youtube_link = "<p class=\"text-danger m-0\">YouTube Link is a required field under 250 characters</p>";
     }
 
     // KEYBOARD RGB
     if ($add_rgb == null) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard RGB is a required field</p>";
+        $message_rgb = "<p class=\"text-danger m-0\">Backlight specification is a required field</p>";
     }
 
     // KEYBOARD LED_TYPE
     if ($add_led_type == 'select') {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard LED Type is a required field</p>";
+        $message_led_type = "<p class=\"text-danger m-0\">LED Type is a required field</p>";
     }
 
     // KEYBOARD CASE MATERIAL
     if ($add_case_material == 'select') {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Case Material is a required field</p>";
+        $message_case_material = "<p class=\"text-danger m-0\">Case Material is a required field</p>";
     }
 
     // KEYBOARD SIZE
     if ($add_size == 'select') {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Size is a required field</p>";
+        $message_size = "<p class=\"text-danger m-0\">Keyboard Size is a required field</p>";
     }
 
     // KEYBOARD CONNECTIVITY
     if ($add_connectivity == null || $add_connectivity == "") {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Connectivity is a required field</p>";
+        $message_connectivity = "<p class=\"text-danger m-0\">Connectivity is a required field</p>";
     }
 
     // IMAGES
     if ($_FILES['myfile']['type'] != "image/jpeg") {
         $proceed = false;
         $update_message .= "<p>Error: JPG Image Requried -- see 'File'</p>";
+        $message_image = "<p class=\"text-danger m-0\">JPG image upload is required</p>";
     }
     if ($_FILES['myfile']['size'] > (4 * 1024 * 1024)) {
         $proceed = false;
@@ -186,26 +198,27 @@ if (isset($_POST["submit"])) {
             createImageCopy($thisFile, $thisFolder, $thisWidth, 0);
 
 
-            // calling the instert statement with the information
+            // calling the insert statement with the information
             $filename = $_FILES['myfile']['name'];
             $connectivityString = implode(', ', $add_connectivity);
             insert_keyboard($add_name, $add_brand, $add_price, $add_rgb, $add_led_type, $add_description, $add_size, $connectivityString, $add_case_material, $add_color, $filename, $add_site, $add_youtube_link);
 
-
+            // displaying text to user and clearing the form inputs
             $success_message = "<p>Keyboard added successfully</p>";
             $_POST['add_name'] = "";
             $_POST['add_brand'] = "";
             $_POST['add_price'] = "";
             $_POST['add_color'] = "";
-            $add_led_type = "";
-            $add_description = "";
-            $add_size = "";
-            $add_connectivity = [];
-            $add_case_material = "";
+            $_POST['add_led_type'] = "";
+            $_POST['add_description'] = "";
+            $_POST['add_size'] = "";
+            $_POST['add_connectivity'] = [];
+            $_POST['add_case_material'] = "";
             $_POST['add_site'] = "";
             $_POST['add_youtube_link'] = "";
-            $add_image = "";
-            $add_rgb = null;
+            $_POST['add_image'] = "";
+            $_POST['add_rgb'] = null;
+
         } else {
             echo "<h3 class=\"alert alert-danger\">ERROR" . $_FILES['myfile']['error'] . "</div>";
         }
@@ -261,6 +274,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- KEYBOARD NAME -->
                 <div class="mb-3">
                     <label for="add_name" class="form-label fw-semibold">Model/Name</label>
+                    <?php if (isset($message_name)): ?>
+                        <?php echo $message_name; ?>
+                    <?php endif; ?>
                     <input type="text" id="add_name" name="add_name" class="form-control"
                         value="<?php echo isset($_POST['add_name']) ? $_POST['add_name'] : "" ?>">
                 </div>
@@ -268,6 +284,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- KEYBOARD BRAND -->
                 <div class="mb-3">
                     <label for="add_brand" class="form-label fw-semibold">Brand</label>
+                    <?php if (isset($message_brand)): ?>
+                        <?php echo $message_brand; ?>
+                    <?php endif; ?>
                     <input type="text" id="add_brand" name="add_brand" class="form-control"
                         value="<?php echo isset($_POST['add_brand']) ? $_POST['add_brand'] : "" ?>">
                 </div>
@@ -275,6 +294,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- KEYBOARD PRICE -->
                 <div class="mb-3">
                     <label for="add_price" class="form-label fw-semibold">Price</label>
+                    <?php if (isset($message_price)): ?>
+                        <?php echo $message_price; ?>
+                    <?php endif; ?>
                     <input type="text" id="add_price" name="add_price" class="form-control"
                         value="<?php echo isset($_POST['add_price']) ? $_POST['add_price'] : "" ?>">
                 </div>
@@ -282,6 +304,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- KEYBOARD COLOR -->
                 <div class="mb-3">
                     <label for="add_color" class="form-label fw-semibold">Color</label>
+                    <?php if (isset($message_color)): ?>
+                        <?php echo $message_color; ?>
+                    <?php endif; ?>
                     <input type="text" id="add_color" name="add_color" class="form-control"
                         value="<?php echo isset($_POST['add_color']) ? $_POST['add_color'] : "" ?>">
                 </div>
@@ -289,6 +314,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- LED TYPE -->
                 <div class="mb-3">
                     <label for="add_led_type" class="form-label fw-semibold">LED Type</label>
+                    <?php if (isset($message_led_type)): ?>
+                        <?php echo $message_led_type; ?>
+                    <?php endif; ?>
                     <select name="add_led_type" id="add_led_type" class="form-select">
                         <?php $led_types =
                             [
@@ -312,6 +340,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- KEYBOARD SIZE -->
                 <div class="mb-3">
                     <label for="add_size" class="form-label fw-semibold">Size</label>
+                    <?php if (isset($message_size)): ?>
+                        <?php echo $message_size; ?>
+                    <?php endif; ?>
                     <select name="add_size" id="add_size" class="form-select">
                         <?php $sizes =
                             [
@@ -338,6 +369,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- CASE MATERIAL -->
                 <div class="mb-3">
                     <label for="add_case_material" class="form-label fw-semibold">Case Material</label>
+                    <?php if (isset($message_case_material)): ?>
+                        <?php echo $message_case_material; ?>
+                    <?php endif; ?>
                     <select name="add_case_material" id="add_case_material" class="form-select">
                         <?php $materials =
                             [
@@ -362,6 +396,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- KEYBOARD CONNECTIVITY -->
                 <div class="form-check m-0 p-0">
                     <p class="fw-semibold mb-0 mt-3 ">Connectivity</p>
+                    <?php if (isset($message_connectivity)): ?>
+                        <?php echo $message_connectivity; ?>
+                    <?php endif; ?>
                     <div class="ps-2 mb-3">
                         <div class="form-check m-0 ">
                             <input class="form-check-input" type="checkbox" value="bluetooth" name="add_connectivity[]"
@@ -391,6 +428,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- DESCRIPTION -->
                 <div class="mb-3">
                     <label for="add_description" class="form-label fw-semibold">Description</label>
+                    <?php if (isset($message_description)): ?>
+                        <?php echo $message_description; ?>
+                    <?php endif; ?>
                     <textarea name="add_description" class="form-control" id="add_description" cols="30"
                         rows="4"><?php echo trim(isset($_POST['add_description']) ? $add_description : "") ?></textarea>
                 </div>
@@ -398,6 +438,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- YOUTUBE LINK -->
                 <div class="mb-3">
                     <label for="add_youtube_link" class="form-label fw-semibold">Youtube Link</label>
+                    <?php if (isset($message_youtube_link)): ?>
+                        <?php echo $message_youtube_link; ?>
+                    <?php endif; ?>
                     <input type="text" id="add_youtube_link" name="add_youtube_link" class="form-control"
                         value="<?php echo isset($_POST['add_youtube_link']) ? $_POST['add_youtube_link'] : "" ?>">
                 </div>
@@ -405,6 +448,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- SITE -->
                 <div class="mb-3">
                     <label for="add_site" class="form-label fw-semibold">Purchase Link</label>
+                    <?php if (isset($message_site)): ?>
+                        <?php echo $message_site; ?>
+                    <?php endif; ?>
                     <input type="text" id="add_site" name="add_site" class="form-control"
                         value="<?php echo isset($_POST['add_site']) ? $_POST['add_site'] : "" ?>">
                 </div>
@@ -412,6 +458,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- FILE UPLOAD -->
                 <div class="mb-3">
                     <label for="myfile" class="form-label">File</label>
+                    <?php if (isset($message_image)): ?>
+                        <?php echo $message_image; ?>
+                    <?php endif; ?>
                     <input type="file" class="form-control" id="myfile" name="myfile"
                         value="<?php echo isset($uploadedFilename) ? $uploadedFilename : ''; ?>">
                 </div>
@@ -419,6 +468,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <!-- RGB -->
                 <div class="form-check m-0 p-0">
                     <p class="fw-semibold mb-0 mt-3 ">Backlight</p>
+                    <?php if (isset($message_rgb)): ?>
+                        <?php echo $message_rgb; ?>
+                    <?php endif; ?>
                     <div class="ps-2 mb-3">
                         <div class="form-check m-0">
                             <input class="form-check-input" value="1" type="radio" name="add_rgb" id="add_rgb_yes" <?php echo $add_rgb == '1' ? 'checked="checked"' : null; ?>>

@@ -132,9 +132,9 @@ include("includes/header.php") ?> <!--***********************************-->
                 <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
                     <?php foreach ($keyboards as $x) { ?>
                         <div class="col card">
-                            <img src="_thumbs200/<?php echo $x['image'] ?>" class="card-img-top img-thumbnail"
+                            <img src="_thumbs200/<?php echo $x['image'] ?>" class="card-img-top mt-3"
                                 alt="picture of keyboard">
-                            <div class="card card-body h-100">
+                            <div class="card-body h-100">
                                 <?php
                                 echo "<h4 class=\"card-title\"><b>" . $x['name'] . "</b></h4>";
                                 echo "<h5 class=\"text-muted card-text\">" . $x['brand'] . "</h5>";
