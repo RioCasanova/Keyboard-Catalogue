@@ -206,6 +206,7 @@ function filter_by_connectivity()
 function insert_keyboard($keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link)
 {
     global $connection;
+
     $insert_statement = $connection->prepare("INSERT INTO keyboards(name, brand, price, rgb, led_type, description, size, connectivity, case_material, color, image, site, youtube_link) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
     $insert_statement->bind_param("ssiisssssssss", $keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link);
     if (!$insert_statement->execute()) {
