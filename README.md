@@ -1,6 +1,26 @@
 # Keyboard-Catalogue
 Final project in PHP and using MariaDb that catalogues custom keyboards
 
+## Submission Requirements
+    URL to main page.
+    a list of features you have incorporated (in point form) . Do not include expected features (examples: secure login, uploading image, etc.), but do include unique features to this project.
+    please list the three or more ways I can filter your items.
+
+## Please upload a ZIP file containing:
+
+    the entire project folder . You can remove the /images/originals/ folder to make for a smaller upload.
+    the exported database table(s)
+
+## Rubric: /20
+
+    Filters: /7
+        3 minimum
+        ONE should be a BETWEEN query
+    Content: /7
+        minimum 25 items; all should have pics.
+        Should have a home page describing the project and perhaps some feature items, interesting use of content (random, etc.) 
+    Features/UX: /6
+    
 ## Step 1 - Research
 Input 25 or more items in the catalogue - or write down 25 keyboards that I would want to include or add to the database.
 
