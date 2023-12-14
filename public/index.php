@@ -53,6 +53,17 @@ $youtube_link = isset($_GET['$youtube_link']) ? $_GET['$youtube_link'] : "";
 
 include("includes/header.php") ?> <!--***********************************-->
 
+<?php
+session_start();
+
+if (isset($_SESSION['message'])) {
+    echo $_SESSION['message'];
+    // Unset the message
+    unset($_SESSION['message']);
+}
+
+// Rest of your code...
+?>
 
 <body class="container">
     <header class="mt-5">
@@ -64,7 +75,18 @@ include("includes/header.php") ?> <!--***********************************-->
             <h1 class="fw-light text-center mt-5">Catalogue Template</h1>
             <p class="text-muted mb-4">This index page is here just so I can use it for reference and have a landing
                 page to access my admin area</p>
-            <p class="mt-4"></p>
+            <p>Add Page: There is not much to say about this page it is pretty straight forward, it comes complete with
+                error handling for each input.</p>
+            <p class="mt-4">Display Page: A unique feature of this project is that when you click to view a particular
+                item there is
+                an embedded youtube video that pertains to the selected item.</p>
+            <p>Edit Page: It didn't make sense in this context to be able to edit the name and brand of a keyboard
+                including some other attributes of an already added keyboard.
+                I made it so that you can only edit certain attributes that would make sense from a consumer
+                perspective, like price, description, color, etc.
+            </p>
+            <p>Delete Page: There is no delete page, it is briefly visited to call a function and then it re-routes the
+                user to the index page</p>
         </div>
     </header>
     <main>

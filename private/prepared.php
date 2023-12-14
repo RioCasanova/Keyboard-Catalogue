@@ -219,7 +219,7 @@ function insert_keyboard($keyboard_name, $brand, $price, $rgb, $led_type, $descr
 function keyboard_by_id($keyboard_id)
 {
     global $connection;
-    $select_by_id_sql = $connection->prepare("SELECT * FROM keyboards WHERE id = ?");
+    $select_by_id_sql = $connection->prepare("SELECT * FROM keyboards WHERE keyboard_id = ?");
     $select_by_id_sql->bind_param("i", $keyboard_id);
     if (!$select_by_id_sql->execute()) {
         handle_database_error("Selecting keyboard by id");
@@ -231,15 +231,15 @@ function keyboard_by_id($keyboard_id)
 }
 
 // ------------------------------------------ UPDATE *****************************************************
-function update_keyboard($keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link, $keyboard_id)
+function update_keyboard($price, $description, $color, $site, $youtube_link, $keyboard_id)
 {
     global $connection;
     $update_statement =
-        $connection->prepare("UPDATE rcasanova2_attractions 
-                      SET name = ?, brand = ?, price = ?, rgb = ?, led_type = ?, description = ?, size = ?, connectivity = ?, case_material = ?, color = ?, image = ?, site = ?, youtube_link = ?
-                      WHERE id = ?");
+        $connection->prepare("UPDATE keyboards 
+                      SET price = ?, description = ?, color = ?, site = ?, youtube_link = ?
+                      WHERE keyboard_id = ?");
 
-    $update_statement->bind_param("ssiisssssssssi", $keyboard_name, $brand, $price, $rgb, $led_type, $description, $size, $connectivity, $case_material, $color, $image, $site, $youtube_link, $keyboard_id);
+    $update_statement->bind_param("issssi", $price, $description, $color, $site, $youtube_link, $keyboard_id);
     $update_statement->execute();
     if (!$update_statement->execute()) {
         handle_database_error("updating keyboard record");
@@ -252,11 +252,16 @@ function update_keyboard($keyboard_name, $brand, $price, $rgb, $led_type, $descr
 function delete_keyboard($keyboard_id)
 {
     global $connection;
-    $delete_statement = $connection->prepare("DELETE FROM keyboards WHERE id = ?");
+    $delete_statement = $connection->prepare("DELETE FROM keyboards WHERE keyboard_id = ?");
     $delete_statement->bind_param("i", $keyboard_id);
     $delete_statement->execute();
     if (!$delete_statement->execute()) {
         handle_database_error("deleting keyboard record");
+        $_SESSION['message'] = "Error: " . $connection->error . ".";
+    } else {
+        echo "Record deleted successfully";
+        $_SESSION['message'] = "Record deleted successfully";
+
     }
 }
 

@@ -116,10 +116,10 @@ if (isset($_POST["submit"])) {
     // KEYBOARD YOUTUBE
     $add_youtube_link = filter_var($add_youtube_link, FILTER_SANITIZE_STRING);
     $add_youtube_link = mysqli_real_escape_string($connection, $add_youtube_link);
-    if (strlen($add_youtube_link) < 2 || strlen($add_youtube_link) > 250) {
+    if (strlen($add_youtube_link) < 2 || strlen($add_youtube_link) > 800) {
         $proceed = false;
         $update_message .= "\n<p>Error: Keyboard Youtube Link Invalid -- see 'Youtube Link'</p>";
-        $message_youtube_link = "<p class=\"text-danger m-0\">YouTube Link is a required field under 250 characters</p>";
+        $message_youtube_link = "<p class=\"text-danger m-0\">YouTube Link is a required field under 800 characters</p>";
     }
 
     // KEYBOARD RGB
@@ -444,6 +444,8 @@ include("includes/header.php") ?> <!--***********************************-->
                     <input type="text" id="add_youtube_link" name="add_youtube_link" class="form-control"
                         value="<?php echo isset($_POST['add_youtube_link']) ? $_POST['add_youtube_link'] : "" ?>">
                 </div>
+
+
 
                 <!-- SITE -->
                 <div class="mb-3">

@@ -26,55 +26,52 @@ if (isset($_POST["logout"])) {
 #endregion
 
 #region Variables & Configuration
-$keyboard_id = isset($_GET['keyboard_id']) ? $_GET['keyboard_id'] : "";
+$current_id = isset($_GET['keyboard_id']) ? $_GET['keyboard_id'] : "";
 if (isset($_GET['keyboard_id'])) {
-    $keyboard_id = $_GET['keyboard_id'];
+    $current_id = $_GET['keyboard_id'];
 } elseif (isset($_POST['keyboard_id'])) {
-    $keyboard_id = $_POST['keyboard_id'];
+    $current_id = $_POST['keyboard_id'];
 } else {
-    $keyboard_id = "";
+    $current_id = "";
 }
 
 $message = "";
 $update_message = "";
 
-$user_attraction_name = isset($_POST['attraction_name']) ? trim($_POST['attraction_name']) : "";
-$user_category = isset($_POST['category']) ? trim($_POST['category']) : "";
-$user_cost = isset($_POST['cost']) ? trim($_POST['cost']) : "";
-$user_address = isset($_POST['address']) ? trim($_POST['address']) : "";
-$user_url = isset($_POST['url']) ? trim($_POST['url']) : "";
-$user_rating = isset($_POST['rating']) ? trim($_POST['rating']) : "";
-$user_description = isset($_POST['description']) ? trim($_POST['description']) : "";
-$user_area_of_town = isset($_POST['area']) ? trim($_POST['area']) : "";
-$user_family_friendly = isset($_POST['friendly']) ? trim($_POST['friendly']) : "";
-$user_season = isset($_POST['season']) ? trim($_POST['season']) : "";
+$new_price = isset($_POST['price']) ? trim($_POST['price']) : "";
+$new_site = isset($_POST['site']) ? trim($_POST['site']) : "";
+$new_description = isset($_POST['description']) ? trim($_POST['description']) : "";
+$new_color = isset($_POST['color']) ? trim($_POST['color']) : "";
+$new_youtube = isset($_POST['youtube_link']) ? trim($_POST['youtube_link']) : "";
 
-$existing_attraction = "";
-$existing_name = "";
-$existing_category = "";
-$existing_cost = "";
-$existing_address = "";
-$existing_url = "";
-$existing_rating = "";
+
+$existing_keyboard = "";
+$keyboard_name = "";
+$keyboard_brand = "";
+$keyboard_size = "";
+$keyboard_connectivity = "";
+$keyboard_brand = "";
+$existing_price = "";
+$existing_site = "";
+$existing_color = "";
 $existing_description = "";
-$existing_area = "";
-$existing_friendly = "";
-$existing_season = "";
+$existing_youtube = "";
 
 
-if (isset($attraction_id) && $attraction_id > 0) {
-    $attraction = select_attraction_by_id($attraction_id);
-    if ($attraction) {
-        $existing_name = $attraction['name'];
-        $existing_category = $attraction["category"];
-        $existing_cost = $attraction["cost"];
-        $existing_address = $attraction["address"];
-        $existing_url = $attraction["url"];
-        $existing_rating = $attraction["rating"];
-        $existing_description = $attraction["description"];
-        $existing_area = $attraction["area_of_town"];
-        $existing_friendly = $attraction["family_friendly"];
-        $existing_season = $attraction["season"];
+if (isset($current_id) && $current_id > 0) {
+    $keyboard = keyboard_by_id($current_id);
+    if ($keyboard) {
+        $keyboard_name = $keyboard['name'];
+        $keyboard_brand = $keyboard["brand"];
+        $keyboard_size = $keyboard["size"];
+        $keyboard_connectivity = $keyboard["connectivity"];
+
+
+        $existing_price = $keyboard["price"];
+        $existing_site = $keyboard["site"];
+        $existing_description = $keyboard["description"];
+        $existing_color = $keyboard["color"];
+        $existing_youtube = $keyboard["youtube_link"];
     } else {
         echo "<p>No record of that</p>";
     }
@@ -89,72 +86,69 @@ if (isset($_POST['submit'])) {
 
     $proceed = true;
     // DESCRIPTION
-    $user_description = filter_var($user_description, FILTER_SANITIZE_STRING);
-    $user_description = mysqli_real_escape_string($connection, $user_description);
-    if (strlen($user_description) < 2 || strlen($user_description) > 250) {
+    $new_description = filter_var($new_description, FILTER_SANITIZE_STRING);
+    $new_description = mysqli_real_escape_string($connection, $new_description);
+    if (strlen($new_description) < 2 || strlen($new_description) > 250) {
         $proceed = false;
         $update_message .= "\n<p>Please enter a description that is either less than 250 characters or more than 2.</p>";
     }
 
-    // ATTRACTION NAME
-    $user_attraction_name = filter_var($user_attraction_name, FILTER_SANITIZE_STRING);
-    $user_attraction_name = mysqli_real_escape_string($connection, $user_attraction_name);
-    if (strlen($user_attraction_name) < 2 || strlen($user_attraction_name) > 30) {
+    // PRICE
+    $new_price = filter_var($new_price, FILTER_SANITIZE_STRING);
+    $new_price = mysqli_real_escape_string($connection, $new_price);
+    if (strlen($new_price) < 1 || strlen($new_price) > 6 || !is_numeric($new_price) || $new_price < 0) {
         $proceed = false;
-        $update_message .= "\n<p>Please enter an attraction name that is between 2 and 30 characters in length.</p>";
+        $update_message .= "\n<p>Please enter a non-negative price that is between 1 and 6 characters in length.</p>";
     }
 
-    // URL
-    $user_url = filter_var($user_url, FILTER_SANITIZE_URL);
-    $url_arr = get_headers($user_url);
-    $response = $url_arr[0];
-    if (strpos($response, "200")) {
-
-    } else {
+    // COLOR(S)
+    $new_color = filter_var($new_color, FILTER_SANITIZE_STRING);
+    $new_color = mysqli_real_escape_string($connection, $new_color);
+    if (strlen($new_color) < 2 || strlen($new_color) > 50) {
         $proceed = false;
-        $update_message .= "\n<p>URL INVALID: Please enter a URL that leads to a current site. If there is not site to be entered, lead the link back to the home page.</p>";
+        $update_message .= "\n<p>Please enter color(s) that are between 2 and 30 characters in length collectively.</p>";
     }
 
-    // ADDRESS
-    $user_address = filter_var($user_address, FILTER_SANITIZE_STRING);
-    $user_address = mysqli_real_escape_string($connection, $user_address);
-    if (strlen($user_address) < 2 || strlen($user_address) > 30) {
+    // PURCHASE SITE LINK
+    $new_site = filter_var($new_site, FILTER_SANITIZE_STRING);
+    $new_site = mysqli_real_escape_string($connection, $new_site);
+    if (strlen($new_site) < 2 || strlen($new_site) > 250) {
         $proceed = false;
-        $update_message .= "\n<p>Please enter an address that is between 2 and 30 characters in length.</p>";
+        $update_message .= "\n<p>Please enter a site link that is between 2 and 250 characters in length.</p>";
     }
+
+    // YOUTUBE LINK
+    $new_youtube = filter_var($new_youtube, FILTER_SANITIZE_STRING);
+    $new_youtube = mysqli_real_escape_string($connection, $new_youtube);
+    if (strlen($new_youtube) < 2 || strlen($new_youtube) > 250) {
+        $proceed = false;
+        $update_message .= "\n<p>Please enter a YouTube link that is between 2 and 250 characters in length.</p>";
+    }
+
+
 
     if ($proceed == true) {
-        update_attraction(
-            $user_attraction_name,
-            $user_category,
-            $user_cost,
-            $user_address,
-            $user_url,
-            $user_description,
-            $user_rating,
-            $user_area_of_town,
-            $user_family_friendly,
-            $user_season,
-            $attraction_id
+        update_keyboard(
+            $new_price,
+            $new_description,
+            $new_color,
+            $new_site,
+            $new_youtube,
+            $current_id
         );
 
-        $message .= "<p>" . $user_attraction_name . " updated successfully.</p>";
+        $message .= "<p>" . $keyboard_name . " updated successfully.</p>";
 
-        $attraction_id = "";
-        $user_attraction_name = "";
-        $user_category = "";
-        $user_cost = "";
-        $user_address = "";
-        $user_url = "";
-        $user_rating = "";
-        $user_description = "";
-        $user_area_of_town = "";
-        $user_family_friendly = "";
-        $user_season = "";
+        $current_id = "";
+        $new_price = "";
+        $new_site = "";
+        $new_description = "";
+        $new_color = "";
+        $new_youtube = "";
     }
 }
 if (isset($_POST['delete'])) {
-    delete_attraction($attraction_id);
+    delete_keyboard($attraction_id);
     $message = "<p>" . $existing_name . " successfully removed.</p>";
     $attraction_id = "";
 }
@@ -179,6 +173,8 @@ include("includes/header.php") ?> <!--***********************************-->
                 would
                 like to change. Next add your updated values into the form and save. If you wish to delete a record
                 press edit and you will find the delete button there.</p>
+            <p>Please note that there are some fields that cannot be changed, such as the name and brand of a keyboard.
+            </p>
         </div>
         <?php if (isset($update_message)): ?>
             <div class="message text-danger">
@@ -195,20 +191,25 @@ include("includes/header.php") ?> <!--***********************************-->
                 </div>
             <?php endif; ?>
             <?php
-            $attractions = get_all_attractions();
-            if (count($attractions) > 0) {
+            $keyboards = get_all_keyboards();
+            if (count($keyboards) > 0) {
                 echo "\n<table class=\"table table-bordered table-hover\"> ";
                 echo "\n\t<tr>";
                 echo "\n\t\t<th scope=\"col\">Name</th>";
-                echo "\n\t\t<th scope=\"col\">Category</th>";
-                echo "\n\t\t<th scope=\"col\">Website</th>";
-                echo "\n\t\t<th scope=\"col\">Actions</th>";
-                foreach ($attractions as $attraction) {
-                    extract($attraction);
+                echo "\n\t\t<th scope=\"col\">Brand</th>";
+                echo "\n\t\t<th scope=\"col\">Price (USD)</th>";
+                echo "\n\t\t<th scope=\"col\">Size</th>";
+                echo "\n\t\t<th scope=\"col\">Color</th>";
+                echo "\n\t\t<th scope=\"col\">Connectivity</th>";
+                foreach ($keyboards as $keyboard) {
+                    extract($keyboard);
                     echo "\n\t\t<tr><td>$name</td>";
-                    echo "<td>$category</td>";
-                    echo "<td><a href=\"$url\" class=\"text-decoration-none text-center\">Link</a></td>";
-                    echo "<td class=\"text-center\"><a href=\"edit.php?attraction_id=$id\" class=\"btn-warning btn\">Edit</a></td>";
+                    echo "<td>$brand</td>";
+                    echo "<td> $" . number_format($price, 1) . "</td>";
+                    echo "<td>$size</td>";
+                    echo "<td>$color</td>";
+                    echo "<td>$connectivity</td>";
+                    echo "<td class=\"text-center\"><a href=\"edit.php?keyboard_id=$keyboard_id\" class=\"btn-warning btn\">Edit</a></td>";
                     echo "\n\t</tr>";
                 }
                 echo "\n</table>";
@@ -222,198 +223,55 @@ include("includes/header.php") ?> <!--***********************************-->
                     <div class="modal-header">
                         <h2 class="modal-title fs-5" id="exampleModalLabel">
                             Edit
-                            <?php echo $existing_name ?>
+                            <?php echo $keyboard_name . "\n" . $keyboard_brand ?>
                         </h2>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-
                         <!-- EDIT FORM -->
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
                             <div class="mb-3">
-                                <label for="attraction_name" class="form-label">Attraction Name</label>
-                                <input type="text" id="attraction_name" name="attraction_name" class="form-control"
-                                    value="<?php if ($user_attraction_name != "") {
-                                        echo $user_attraction_name;
-                                    } else {
-                                        echo $existing_name;
-                                    } ?>">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="category" class="form-label">Category</label>
-                                <select name="category" id="category" class="form-select">
-                                    <?php $categories =
-                                        [
-                                            'Shopping' => 'Shopping',
-                                            'Historical Buildings & Monuments' => 'Historical Buildings & Monuments',
-                                            'Parks & Natural Attractions' => 'Parks & Natural Attractions',
-                                            'Fine Arts' => 'Fine Arts',
-                                            'Science & Technology' => 'Science & Technology',
-                                            'Live Music & Theatre' => 'Live Music & Theatre',
-                                            'Recreational Facilities' => 'Recreational Facilities',
-                                            'Year-Round Attractions' => 'Year-Round Attractions',
-                                            'Restaurants & Food Vendors' => 'Restaurants & Food Vendors',
-                                            'Festivals' => 'Festivals'
-                                        ];
-
-                                    foreach ($categories as $key => $value) {
-                                        if ($user_category == $key || $existing_category == $key) {
-                                            $selected = 'selected';
-                                        } else {
-                                            $selected = '';
-                                        }
-                                        echo "\n<option value=\"$key\" $selected>$value</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="cost" class="form-label">Cost</label>
-                                <select name="cost" id="cost" class="form-select">
-                                    <?php $costs =
-                                        [
-                                            '$$$' => '$$$',
-                                            '$$' => '$$',
-                                            '$' => '$',
-                                            'free' => 'free'
-                                        ];
-
-                                    foreach ($costs as $key => $value) {
-                                        if ($user_cost == $key || $existing_cost == $key) {
-                                            $selected = 'selected';
-                                        } else {
-                                            $selected = '';
-                                        }
-                                        echo "\n<option value=\"$key\" $selected>$value</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Address</label>
-                                <input type="text" id="address" name="address" class="form-control" value="<?php if ($user_address != "") {
-                                    echo $user_address;
+                                <label for="price" class="form-label">Price</label>
+                                <input type="text" id="price" name="price" class="form-control" value="<?php if ($new_price != "") {
+                                    echo $new_price;
                                 } else {
-                                    echo $existing_address;
+                                    echo $existing_price;
                                 } ?>">
                             </div>
                             <div class="mb-3">
-                                <label for="url" class="form-label">URL</label>
-                                <input type="text" id="url" name="url" class="form-control" value="<?php if ($user_url != "") {
-                                    echo $user_url;
+                                <label for="color" class="form-label">Color(s)</label>
+                                <input type="text" id="color" name="color" class="form-control" value="<?php if ($new_color != "") {
+                                    echo $new_color;
                                 } else {
-                                    echo $existing_url;
+                                    echo $existing_color;
                                 } ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
-                                <input type="text-area" id="description" name="description" class="form-control" value="<?php if ($user_description != "") {
-                                    echo $user_description;
+                                <input type="text-area" id="description" name="description" class="form-control" value="<?php if ($new_description != "") {
+                                    echo $new_description;
                                 } else {
                                     echo $existing_description;
                                 } ?>">
                             </div>
                             <div class="mb-3">
-                                <label for="rating" class="form-label">Rating</label>
-                                <select name="rating" id="rating" class="form-select">
-                                    <?php $ratings =
-                                        [
-                                            '1' => '1',
-                                            '2' => '2',
-                                            '3' => '3',
-                                            '4' => '4',
-                                            '5' => '5'
-                                        ];
-
-                                    foreach ($ratings as $key => $value) {
-                                        if ($user_rating == $key || $existing_rating == $key) {
-                                            $selected = 'selected';
-                                        } else {
-                                            $selected = '';
-                                        }
-                                        echo "\n<option value=\"$key\" $selected>$value</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <label for="site" class="form-label">Purchase Site Link</label>
+                                <input type="text" id="site" name="site" class="form-control" value="<?php if ($new_site != "") {
+                                    echo $new_site;
+                                } else {
+                                    echo $existing_site;
+                                } ?>">
                             </div>
                             <div class="mb-3">
-                                <label for="area" class="form-label">Area of Town</label>
-                                <select name="area" id="area" class="form-select">
-                                    <?php $areas =
-                                        [
-                                            'West Edmonton' => 'West Edmonton',
-                                            'Southwest Edmonton' => 'Southwest Edmonton',
-                                            'Northwest Edmonton' => 'Northwest Edmonton',
-                                            'Downtown' => 'Downtown',
-                                            'East Edmonton' => 'East Edmonton',
-                                            'Southeast Edmonton' => 'Southeast Edmonton',
-                                            'Northeast Edmonton' => 'Northeast Edmonton',
-                                            'Central Edmonton' => 'Central Edmonton',
-                                            'South Central Edmonton' => 'South Central Edmonton',
-                                            'North Central Edmonton' => 'North Central Edmonton',
-                                            'South Edmonton' => 'South Edmonton',
-                                            'North Edmonton' => 'North Edmonton',
-                                            'University Area' => 'University Area',
-                                            'Westmount' => 'Westmount',
-                                            'Various' => 'Multiple Locations'
-                                        ];
-
-                                    foreach ($areas as $key => $value) {
-                                        if ($user_area_of_town == $key || $existing_area == $key) {
-                                            $selected = 'selected';
-                                        } else {
-                                            $selected = '';
-                                        }
-                                        echo "\n<option value=\"$key\" $selected>$value</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="friendly" class="form-label">Family Friendly</label>
-                                <select name="friendly" id="friendly" class="form-select">
-                                    <?php $friendlys =
-                                        [
-                                            '1' => 'Yes',
-                                            '0' => 'No'
-                                        ];
-
-                                    foreach ($friendlys as $key => $value) {
-                                        if ($user_family_friendly == $key || $existing_friendly == $key) {
-                                            $selected = 'selected';
-                                        } else {
-                                            $selected = '';
-                                        }
-                                        echo "\n<option value=\"$key\" $selected>$value</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="season" class="form-label">Season</label>
-                                <select name="season" id="season" class="form-select">
-                                    <?php $seasons =
-                                        [
-                                            'Year-round' => 'Year-round',
-                                            'Summer' => 'Summer',
-                                            'Winter' => 'Winter'
-                                        ];
-
-                                    foreach ($seasons as $key => $value) {
-                                        if ($user_season == $key || $existing_season == $key) {
-                                            $selected = 'selected';
-                                        } else {
-                                            $selected = '';
-                                        }
-                                        echo "\n<option value=\"$key\" $selected>$value</option>";
-                                    }
-                                    ?>
-                                </select>
+                                <label for="youtube_link" class="form-label">YouTube Link</label>
+                                <input type="text" id="youtube_link" name="youtube_link" class="form-control" value="<?php if ($new_youtube != "") {
+                                    echo $new_youtube;
+                                } else {
+                                    echo $existing_youtube;
+                                } ?>">
                             </div>
                             <!-- Hidden Values -->
-                            <input type="hidden" name="attraction_id" value="<?php echo $attraction_id; ?>">
+                            <input type="hidden" name="keyboard_id" value="<?php echo $current_id; ?>">
                             <!-- Because we're storing our city id number in $_GET, we need to include it here again; otherwise, we may lose it when we submit the form and nothing will happen. -->
 
                             <!-- Submit -->
