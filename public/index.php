@@ -41,6 +41,7 @@ $size = isset($_GET['size']) ? $_GET['size'] : "";
 $price = isset($_GET['price']) ? $_GET['price'] : 0;
 $connectivity = isset($_GET['connectivity']) ? $_GET['connectivity'] : "";
 
+
 // Also attributes -- but will not be filtered by
 $name = isset($_GET['name']) ? $_GET['name'] : "";
 $case_material = isset($_GET['case_material']) ? $_GET['case_material'] : 0;
@@ -49,6 +50,28 @@ $image = isset($_GET['image']) ? $_GET['image'] : "";
 $site = isset($_GET['site']) ? $_GET['site'] : 0;
 $description = isset($_GET['description']) ? $_GET['description'] : "";
 $youtube_link = isset($_GET['$youtube_link']) ? $_GET['$youtube_link'] : "";
+#endregion
+
+#region Filter Variables
+
+// text fields
+$filter_brand = isset($_GET['filter_brand']) ? trim($_GET['filter_brand']) : "";
+$filter_color = isset($_GET['filter_color']) ? trim($_GET['filter_color']) : "";
+
+// prices
+$minPrice = isset($_GET['minPrice']) ? $_GET['minPrice'] : null;
+$maxPrice = isset($_GET['maxPrice']) ? $_GET['maxPrice'] : null;
+
+// radio
+$filter_rgb = isset($_GET['filter_rgb']) ? $_GET['filter_rgb'] : null;
+
+// select
+$filter_led_type = isset($_GET['filter_led_type']) ? trim($_GET['filter_led_type']) : "";
+$filter_size = isset($_GET['filter_size']) ? trim($_GET['filter_size']) : "";
+$filter_case_material = isset($_GET['filter_case_material']) ? trim($_GET['filter_case_material']) : "";
+
+// checkboxes - done
+$filter_connectivity = isset($_GET['filter_connectivity']) ? $_GET['filter_connectivity'] : [];
 #endregion
 
 include("includes/header.php") ?> <!--***********************************-->
@@ -62,116 +85,217 @@ if (isset($_SESSION['message'])) {
     unset($_SESSION['message']);
 }
 
-// Rest of your code...
 ?>
 
-<body class="container">
-    <header class="mt-5">
-        <nav class="mb-5 pb-5">
-            <a href="index.php" class="btn btn-dark">Home</a>
-            <a href="login.php" class="btn btn-success">Login</a>
-        </nav>
-        <div class="">
-            <h1 class="fw-light text-center mt-5">Catalogue Template</h1>
-            <p class="text-muted mb-4">This index page is here just so I can use it for reference and have a landing
-                page to access my admin area</p>
-            <p>Add Page: There is not much to say about this page it is pretty straight forward, it comes complete with
-                error handling for each input.</p>
-            <p class="mt-4">Display Page: A unique feature of this project is that when you click to view a particular
-                item there is
-                an embedded youtube video that pertains to the selected item.</p>
-            <p>Edit Page: It didn't make sense in this context to be able to edit the name and brand of a keyboard
-                including some other attributes of an already added keyboard.
-                I made it so that you can only edit certain attributes that would make sense from a consumer
-                perspective, like price, description, color, etc.
-            </p>
-            <p>Delete Page: There is no delete page, it is briefly visited to call a function and then it re-routes the
-                user to the index page</p>
-        </div>
-    </header>
-    <main>
-        <section class="mb-4">
 
-            <!-- Filter options here -->
+<body class="container-fluid">
+    <div class="row">
+        <!-- Filter Area -->
+        <div class="col-md-2 ps-0">
+            <div class="d-flex flex-column p-3  h-100 w-100 text-bg-dark">
+                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none">
+                    <svg class="bi pe-none me-2" width="40" height="32">
+                        <use xlink:href="#bootstrap"></use>
+                    </svg>
+                    <span class="fs-4">Filters</span>
+                </a>
+                <hr>
+                <form method="GET" action="index.php">
+                    <div class="mb-3">
+                        <label for="filter_brand" class="form-label">Brand</label>
+                        <input type="text" class="form-control" id="filter_brand" name="filter_brand"
+                            value="<?php echo isset($_GET['filter_brand']) ? $_GET['filter_brand'] : "" ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="minPrice" class="form-label">Minimum Price</label>
+                        <input type="number" class="form-control" id="minPrice" name="minPrice" min="0" step="0.05"
+                            value="<?php echo isset($_GET['minPrice']) ? $_GET['minPrice'] : "" ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="maxPrice" class="form-label">Maximum Price</label>
+                        <input type="number" class="form-control" id="maxPrice" name="maxPrice" min="0" step="0.05"
+                            value="<?php echo isset($_GET['maxPrice']) ? $_GET['maxPrice'] : "" ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="filter_case_material" class="form-label">Case Material</label>
+                        <select name="filter_case_material" id="filter_case_material" class="form-select">
+                            <?php $materials =
+                                [
+                                    'select' => 'Select Material...',
+                                    'aluminum' => 'Aluminum',
+                                    'plastic' => 'Plastic',
+                                    'wood' => 'Wood'
+                                ];
 
-            <!-- <h2 class="fw-bold mt-5 mb-3">Browse by:</h2>
-            <div class="text-center">
-                <button class="btn btn-outline-primary m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Shopping"
-                        class="text-decoration-none text-reset">Brand</a>
-                </button>
-                <button class="btn btn-outline-secondary m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Historical%20Buildings%20%26%20Monuments"
-                        class="text-decoration-none text-reset">
-                        RGB</a>
-                </button>
-                <button class="btn btn-outline-success m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Parks%20%26%20Natural%20Attractions"
-                        class="text-decoration-none text-reset">LED</a>
-                </button>
-                <button class="btn btn-outline-danger m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Fine%20Arts"
-                        class="text-decoration-none text-reset">60%</a>
-                </button>
-                <button class="btn btn-outline-warning m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Science%20%26%20Technology"
-                        class="text-decoration-none text-reset">65%</a>
-                </button>
-                <button class="btn btn-outline-info m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Live%20Music%20%26%20Theatre"
-                        class="text-decoration-none text-reset">75%</a>
-                </button>
-                <button class="btn btn-outline-dark m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Recreational%20Facilities"
-                        class="text-decoration-none text-reset">98%</a>
-                </button>
-                <button class="btn btn-outline-primary m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Year-Round%20Attractions"
-                        class="text-decoration-none text-reset">Year-Round Attractions</a>
-                </button>
-                <button class="btn btn-outline-secondary m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Restaurants%20%26%20Food%20Vendors"
-                        class="text-decoration-none text-reset">Restaurants & Food Vendors</a>
-                </button>
-                <button class="btn btn-outline-success m-2">
-                    <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?category=Festivals"
-                        class="text-decoration-none text-reset">Festivals</a>
-                </button>
-            </div> -->
+                            foreach ($materials as $key => $value) {
+                                if ($filter_case_material == $key) {
+                                    $selected = 'selected';
+                                } else {
+                                    $selected = '';
+                                }
+                                echo "\n<option value=\"$key\" $selected>$value</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
 
+                    <div class="mb-3">
+                        <label for="filter_size" class="form-label">Size</label>
+                        <select name="filter_size" id="filter_size" class="form-select">
+                            <?php $sizes =
+                                [
+                                    'select' => 'Select Size...',
+                                    '60%' => '60%',
+                                    '65%' => '65%',
+                                    '75%' => '75%',
+                                    '98%' => '98%',
+                                ];
 
-            <!-- Display items -- Gallery -->
-            <div>
-                <?php
-                // if (isset($_GET['category']) && !empty($_GET['category'])) {
-                //     $attractions = filter_by_category();
-                // } else {
-                
-                // }
-                $keyboards = get_all_keyboards();
-                ?>
+                            foreach ($sizes as $key => $value) {
+                                if ($filter_size == $key) {
+                                    $selected = 'selected';
+                                } else {
+                                    $selected = '';
+                                }
+                                echo "\n<option value=\"$key\" $selected>$value</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="led_type" class="form-label">LED Type</label>
+                        <div class="mb-3">
+                            <select name="filter_led_type" id="filter_led_type" class="form-select">
+                                <?php $led_types =
+                                    [
+                                        'select' => 'Select LED...',
+                                        'south' => 'South-Facing',
+                                        'north' => 'North-Facing',
+                                    ];
 
-                <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
-                    <?php foreach ($keyboards as $x) { ?>
-                        <div class="col card">
-                            <img src="_thumbs200/<?php echo $x['image'] ?>" class="card-img-top mt-3"
-                                alt="picture of keyboard">
-                            <div class="card-body h-100">
-                                <?php
-                                echo "<h4 class=\"card-title\"><b>" . $x['name'] . "</b></h4>";
-                                echo "<h5 class=\"text-muted card-text\">" . $x['brand'] . "</h5>";
-                                echo "<p class=\"card-text\"><b>Cost: </b>" . $x['price'] . "</p>";
-                                echo "<p class=\"card-text\"><b>RGB: </b>" . $x['rgb'] . "</p>";
-                                echo "<p class=\"card-text\"><b>LED: </b>" . $x['led_type'] . "</p>";
-                                echo "<p class=\"card-text\"><b>Size: </b>" . $x['size'] . "</p>";
-                                echo "<p class=\"card-text\"><b>Connectivity: </b>" . $x['connectivity'] . "</p>";
-                                echo "<p class=\"card-text\"><a href=\"display.php?keyboard_id=" . $x['keyboard_id'] . "\">View</a></p>";
+                                foreach ($led_types as $key => $value) {
+                                    if ($filter_led_type == $key) {
+                                        $selected = 'selected';
+                                    } else {
+                                        $selected = '';
+                                    }
+                                    echo "\n<option value=\"$key\" $selected>$value</option>";
+                                }
                                 ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="connectivity" class="form-label">Connectivity</label>
+                        <div class="ps-2 mb-3">
+                            <div class="form-check m-0 ">
+                                <input class="form-check-input" type="checkbox" value="bluetooth"
+                                    name="filter_connectivity[]" id="bluetooth" <?php echo (in_array('bluetooth', $filter_connectivity)) ? 'checked="checked"' : ''; ?>>
+                                <label class="form-check-label" for="filter_connectivity">
+                                    Bluetooth
+                                </label>
+                            </div>
+                            <div class="form-check m-0">
+                                <input class="form-check-input" type="checkbox" value="dongle"
+                                    name="filter_connectivity[]" id="dongle" <?php echo (in_array('dongle', $filter_connectivity)) ? 'checked="checked"' : ''; ?>>
+                                <label class="form-check-label" for="filter_connectivity">
+                                    2.4
+                                </label>
+                            </div>
+                            <div class="form-check m-0">
+                                <input class="form-check-input" type="checkbox" value="wired"
+                                    name="filter_connectivity[]" id="wired" <?php echo (in_array('wired', $filter_connectivity)) ? 'checked="checked"' : ''; ?>>
+                                <label class="form-check-label" for="filter_connectivity">
+                                    Wired
+                                </label>
                             </div>
                         </div>
-                    <?php } ?>
+                    </div>
+                    <div class="mb-3">
+                        <label for="case_material" class="form-label">RGB</label>
+                        <div class="ps-2 mb-3">
+                            <div class="form-check m-0">
+                                <input class="form-check-input" value="1" type="radio" name="filter_rgb"
+                                    id="filter_rgb_yes" <?php echo $filter_rgb == '1' ? 'checked="checked"' : null; ?>>
+                                <label class="form-check-label" for="filter_rgb_yes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check m-0">
+                                <input class="form-check-input" value="0" type="radio" name="filter_rgb"
+                                    id="filter_rgb_no" <?php echo ($filter_rgb == '0') ? 'checked="checked"' : null; ?>>
+                                <label class="form-check-label" for="filter_rgb_no">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="filter_color" class="form-label">Color</label>
+                        <input type="text" class="form-control" id="filter_color" name="filter_color"
+                            value="<?php echo isset($_GET['filter_color']) ? $_GET['filter_color'] : "" ?>">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </form>
+                <hr>
+                <div>
+                    <p>Unique Features:
+                    <ul>
+                        <li>Sidebar</li>
+                        <li>Youtube Video Embedding</li>
+                    </ul>
+                    </p>
                 </div>
             </div>
-        </section>
-    </main>
-    <?php include("includes/footer.php") ?>
+        </div>
+
+        <!-- Main Area -->
+        <div class="container col-md-10">
+            <header class="mt-5">
+                <nav class="mb-5 pb-5">
+                    <a href="index.php" class="btn btn-dark">Home</a>
+                    <a href="login.php" class="btn btn-success">Login</a>
+                </nav>
+                <div class="text-center">
+                    <h1 class="fw-light text-center mt-5">Keyboards</h1>
+                    <p class="text-muted">View a keyboard for more details</p>
+                </div>
+            </header>
+            <!-- Display items -- Gallery -->
+            <main>
+                <section class="mb-4">
+
+                    <div>
+                        <?php
+                        if (isset($_GET['filter']) && !empty($_GET['filter'])) {
+                            $keyboards = filter_by_category();
+                        } else {
+                            $keyboards = get_all_keyboards();
+                        }
+
+                        ?>
+
+                        <div class="row row-cols-1 row-cols-md-3 p-5 flex-nowrap justify-content-center">
+                            <?php foreach ($keyboards as $x) { ?>
+                                <div class="col card mx-2">
+                                    <img src="_thumbs200/<?php echo $x['image'] ?>" class="card-img-top mt-3"
+                                        alt="picture of keyboard">
+                                    <div class="card-body">
+                                        <?php
+                                        echo "<h4 class=\"card-title\"><b>" . $x['name'] . "</b></h4>";
+                                        echo "<h5 class=\"text-muted card-text\">" . $x['brand'] . "</h5>";
+                                        echo "<p class=\"card-text\"><b>(USD) Cost: </b>$" . $x['price'] . "</p>";
+                                        echo "<p class=\"card-text\"><b>RGB: </b>" . $x['rgb'] . "</p>";
+                                        echo "<p class=\"card-text\"><b>LED: </b>" . $x['led_type'] . "</p>";
+                                        echo "<p class=\"card-text\"><b>Size: </b>" . $x['size'] . "</p>";
+                                        echo "<p class=\"card-text\"><b>Connectivity: </b>" . $x['connectivity'] . "</p>";
+                                        echo "<p class=\"card-text\"><a href=\"display.php?keyboard_id=" . $x['keyboard_id'] . "\">View</a></p>";
+                                        ?>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <?php include("includes/footer.php") ?>

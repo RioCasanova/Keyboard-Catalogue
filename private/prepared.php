@@ -44,7 +44,45 @@ function get_all_keyboards() // diasplays all items in database 'keyboards'
 
 #region Filters *****************************************************
 
+function filter_by_all()
+{
+    global $connection;
+    $keyboard_by_all = "SELECT * FROM keyboards WHERE";
 
+    if (isset($_GET['filter_brand'])) {
+        $brand_text = $connection->real_escape_string($_GET['filter_brand']);
+        $keyboard_by_all .= " brand LIKE %$brand_text% ";
+    }
+
+    if (isset($_GET['filter_rgb'])) {
+
+        $rgb = $_GET['filter_rgb'];
+        $keyboard_by_all .= " rgb = $rgb";
+    }
+
+    if (isset($_GET['filter_led_type'])) {
+        $led_type_text = $connection->real_escape_string($_GET['filter_led_type']);
+        $keyboard_by_all .= " led_type LIKE %$led_type_text% ";
+    }
+
+    $led_type = $_GET['filter_led_type'];
+    $size = $_GET['filter_size'];
+    $min_price = $_GET['minPrice'];
+    $max_price = $_GET['maxPrice'];
+    $connectivity = $_GET['filter_connectivity'];
+    $color = $_GET['filter_color'];
+
+    // bind the parameters 
+    $keyboard_by_all->bind_param("sissiiss", $brand, $rgb, $led_type, $size, $min_price, $max_price, $connectivity, $color);
+
+    if (!$keyboard_by_all->execute()) {
+        handle_database_error("filtering by all");
+    }
+
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+}
 // LOAD RESULTS ACCORDING TO: brand
 function filter_by_brand()
 {
@@ -150,15 +188,16 @@ function filter_by_size()
 function filter_by_price()
 {
     global $connection;
-    $keyboard_by_price = $connection->prepare("SELECT * FROM keyboards WHERE price = ?");
-    $price = $_GET['price'];
+    $keyboard_by_price = $connection->prepare("SELECT * FROM your_table WHERE price BETWEEN ? AND ?");
+    $min_price = $_GET['minPrice'];
+    $max_price = $_GET['maxPrice'];
 
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
 
 
-    $keyboard_by_price->bind_param("s", $price);
+    $keyboard_by_price->bind_param("ii", $min_price, $max_price);
 
     if (!$keyboard_by_price->execute()) {
         handle_database_error("selecting keyboard by price");
