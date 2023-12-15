@@ -91,12 +91,6 @@ $keyboard_id = isset($_GET['keyboard_id']) ? $_GET['keyboard_id'] : 0;
 
                 ?>
 
-                <form method="POST" action="delete.php"
-                    onsubmit="return confirm('Are you sure you want to delete this record?');">
-                    <input type="hidden" name="delete_id" value="<?php echo $row['keyboard_id']; ?>">
-                    <input type="submit" value="Delete">
-                </form>
-
             </div>
         <?php }
     ?>

@@ -54,6 +54,9 @@ $youtube_link = isset($_GET['$youtube_link']) ? $_GET['$youtube_link'] : "";
 
 #region Filter Variables
 
+// filter
+$filter = isset($_GET['filter']) ? $_GET['filter'] : null;
+
 // text fields
 $filter_brand = isset($_GET['filter_brand']) ? trim($_GET['filter_brand']) : "";
 $filter_color = isset($_GET['filter_color']) ? trim($_GET['filter_color']) : "";
@@ -76,17 +79,6 @@ $filter_connectivity = isset($_GET['filter_connectivity']) ? $_GET['filter_conne
 
 include("includes/header.php") ?> <!--***********************************-->
 
-<?php
-session_start();
-
-if (isset($_SESSION['message'])) {
-    echo $_SESSION['message'];
-    // Unset the message
-    unset($_SESSION['message']);
-}
-
-?>
-
 
 <body class="container-fluid">
     <div class="row">
@@ -100,7 +92,7 @@ if (isset($_SESSION['message'])) {
                     <span class="fs-4">Filters</span>
                 </a>
                 <hr>
-                <form method="GET" action="index.php">
+                <form method="GET" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                     <div class="mb-3">
                         <label for="filter_brand" class="form-label">Brand</label>
                         <input type="text" class="form-control" id="filter_brand" name="filter_brand"
@@ -235,7 +227,7 @@ if (isset($_SESSION['message'])) {
                         <input type="text" class="form-control" id="filter_color" name="filter_color"
                             value="<?php echo isset($_GET['filter_color']) ? $_GET['filter_color'] : "" ?>">
                     </div>
-                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <button type="submit" class="btn btn-primary" name="filter">Apply Filters</button>
                 </form>
                 <hr>
                 <div>
@@ -268,16 +260,16 @@ if (isset($_SESSION['message'])) {
                     <div>
                         <?php
                         if (isset($_GET['filter']) && !empty($_GET['filter'])) {
-                            $keyboards = filter_by_category();
+                            $keyboards = filter_by_all();
                         } else {
                             $keyboards = get_all_keyboards();
                         }
 
                         ?>
 
-                        <div class="row row-cols-1 row-cols-md-3 p-5 flex-nowrap justify-content-center">
+                        <div class="row p-5 justify-content-center">
                             <?php foreach ($keyboards as $x) { ?>
-                                <div class="col card mx-2">
+                                <div class="col-md-3 card mx-1 flex-nowrap mb-2">
                                     <img src="_thumbs200/<?php echo $x['image'] ?>" class="card-img-top mt-3"
                                         alt="picture of keyboard">
                                     <div class="card-body">

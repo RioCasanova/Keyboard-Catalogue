@@ -55,33 +55,72 @@ function filter_by_all()
     }
 
     if (isset($_GET['filter_rgb'])) {
-
+        if (isset($_GET['filter_brand'])) {
+            $keyboard_by_all .= " AND";
+        }
         $rgb = $_GET['filter_rgb'];
         $keyboard_by_all .= " rgb = $rgb";
     }
 
     if (isset($_GET['filter_led_type'])) {
+        if (isset($_GET['filter_brand']) || isset($_GET['filter_rgb'])) {
+            $keyboard_by_all .= " AND";
+        }
         $led_type_text = $connection->real_escape_string($_GET['filter_led_type']);
         $keyboard_by_all .= " led_type LIKE %$led_type_text% ";
     }
 
-    $led_type = $_GET['filter_led_type'];
-    $size = $_GET['filter_size'];
-    $min_price = $_GET['minPrice'];
-    $max_price = $_GET['maxPrice'];
-    $connectivity = $_GET['filter_connectivity'];
-    $color = $_GET['filter_color'];
 
-    // bind the parameters 
-    $keyboard_by_all->bind_param("sissiiss", $brand, $rgb, $led_type, $size, $min_price, $max_price, $connectivity, $color);
-
-    if (!$keyboard_by_all->execute()) {
-        handle_database_error("filtering by all");
+    if (isset($_GET['filter_size'])) {
+        if (isset($_GET['filter_brand']) || isset($_GET['filter_rgb']) || isset($_GET['filter_led_type'])) {
+            $keyboard_by_all .= " AND";
+        }
+        $size = $_GET['filter_size'];
+        $keyboard_by_all .= " size = $size";
     }
 
-    if ($connection->connect_error) {
-        die("Connection failed: " . $connection->connect_error);
+    if (isset($_GET['minPrice']) || isset($_GET['maxPrice'])) {
+        $min_price = $_GET['minPrice'];
+        $max_price = $_GET['maxPrice'];
+        if (isset($_GET['filter_brand']) || isset($_GET['filter_rgb']) || isset($_GET['filter_led_type']) || isset($_GET['filter_size'])) {
+            $keyboard_by_all .= " AND";
+        }
+        if (isset($_GET['minPrice']) && isset($_GET['maxPrice'])) {
+            $keyboard_by_all .= " price BETWEEN $min_price AND $max_price";
+        } else {
+            if (isset($_GET['minPrice'])) {
+                $keyboard_by_all .= " price >= $min_price";
+            }
+            if (isset($_GET['maxPrice'])) {
+                $keyboard_by_all .= " price <= $max_price";
+            }
+        }
     }
+
+    if (isset($_GET['filter_connectivity'])) {
+        if (isset($_GET['filter_brand']) || isset($_GET['filter_rgb']) || isset($_GET['filter_led_type']) || isset($_GET['filter_size']) || isset($_GET['minPrice']) || isset($_GET['maxPrice'])) {
+            $keyboard_by_all .= " AND";
+        }
+        $connectivity = $_GET['filter_connectivity'];
+        $keyboard_by_all .= " connectivity = $connectivity";
+    }
+
+    if (isset($_GET['filter_color'])) {
+        if (isset($_GET['filter_brand']) || isset($_GET['filter_rgb']) || isset($_GET['filter_led_type']) || isset($_GET['filter_size']) || isset($_GET['minPrice']) || isset($_GET['maxPrice']) || isset($_GET['filter_connectivity'])) {
+            $keyboard_by_all .= " AND";
+        }
+        $color = $_GET['filter_color'];
+        $keyboard_by_all .= " color LIKE %$color%";
+    }
+
+
+    $result = $connection->query($keyboard_by_all);
+    $atts = [];
+    while ($row = $result->fetch_assoc()) {
+
+        $atts[] = $row;
+    }
+    return $atts;
 }
 // LOAD RESULTS ACCORDING TO: brand
 function filter_by_brand()
